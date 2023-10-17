@@ -1,19 +1,27 @@
 import { API, DynamicPlatformPlugin, Logger, PlatformAccessory, PlatformConfig, Service, Characteristic } from 'homebridge';
+import { WebSocket } from ws;
 
 import { PLATFORM_NAME, PLUGIN_NAME } from './settings';
 import { ExamplePlatformAccessory } from './platformAccessory';
+
+// import {} from './../3rd_party/gira/hs.src'
+
+enum connStatus {undef, auth, connected};
 
 /**
  * HomebridgePlatform
  * This class is the main constructor for your plugin, this is where you should
  * parse the user config and discover/register accessories with Homebridge.
  */
-export class ExampleHomebridgePlatform implements DynamicPlatformPlugin {
+export class HsdPlatform implements DynamicPlatformPlugin {
   public readonly Service: typeof Service = this.api.hap.Service;
   public readonly Characteristic: typeof Characteristic = this.api.hap.Characteristic;
 
   // this is used to track restored cached accessories
   public readonly accessories: PlatformAccessory[] = [];
+
+  private ws: WebSocket;
+  private wsStatus = connStatus.undef;
 
   constructor(
     public readonly log: Logger,
@@ -26,11 +34,76 @@ export class ExampleHomebridgePlatform implements DynamicPlatformPlugin {
     // Dynamic Platform plugins should only register new accessories after this event was fired,
     // in order to ensure they weren't added to homebridge already. This event can also be used
     // to start discovery of new accessories.
+
+    // establish connection
+    const serverUrl = "wss://" + this.config.hsIp + "/endpoints/ws";
+    this.ws = new WebSocket(serverUrl);
+
+    // register socket events
+    this.ws.on('open', () => {
+      console.log('Connected to the WebSocket server.');
+    });
+
+    this.ws.on('message', (message: string) => {
+      this.onMessageReceived(message);
+    });
+
+    this.ws.on('close', () => {
+      console.log('Connection closed.');
+    });
+
+    this.ws.on('error', (error: Error) => {
+      console.error(`WebSocket Error: ${error.message}`);
+    });
+
     this.api.on('didFinishLaunching', () => {
       log.debug('Executed didFinishLaunching callback');
       // run the method to discover / register your devices as accessories
       this.discoverDevices();
     });
+  }
+
+  public send(data: string) {
+    this.ws.send(data);
+    console.log(`Sent: ${data}`);
+  }
+
+  public onMessageReceived(message: string) {
+    console.log(`Received: ${message}`);
+
+    if (this.wsStatus == connStatus.auth) {
+      const data = JSON.parse(message);
+      if (data.type === 'auth-success') {
+        console.log('Authentication successful: ' + data.message);
+        // You can now send and receive data securely.
+      } else if (data.type === 'auth-failure') {
+        console.log('Authentication failed: ' + data.message);
+        // Handle authentication failure as needed.
+      } else {
+        // Handle other message types as needed.
+      }
+    }
+  }
+
+  public close() {
+    this.ws.close();
+  }
+
+  public authenticate() {
+    this.wsStatus = connStatus.auth;
+
+    const base64EncodedString = btoa('$(this.config.hsUserName):$(this.config.hsUserPw)')
+
+    const msg = {
+      "GET": "/endpoints/ws?authorization=$(base64EncodedString) HTTP/1.1",
+      "Host": "192.168.0.11",
+      "Upgrade": "websocket",
+      "Sec-WebSocket-Version": "13",
+      "Sec-WebSocket-Key": "dGhlIHNhbXBsZSBub25jZQ=="
+    };
+
+
+    this.ws.send(JSON.stringify({ type: 'auth', username: this.config.hsUserName, password: this.config.hsUserPw }));
   }
 
   /**
