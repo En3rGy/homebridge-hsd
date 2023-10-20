@@ -1,7 +1,5 @@
 import { API, DynamicPlatformPlugin, Logger, PlatformAccessory, PlatformConfig, Service, Characteristic } from 'homebridge';
-import { WebSocket } from ws;
-
-import { HomeServerConnector } from "../3rd_party/gira/hs.src.js"
+import { HomeServerConnector, CONNECTION_STATE } from './hs';
 
 import { PLATFORM_NAME, PLUGIN_NAME } from './settings';
 import { ExamplePlatformAccessory } from './platformAccessory';
@@ -18,36 +16,21 @@ export class HsdPlatform implements DynamicPlatformPlugin {
   // this is used to track restored cached accessories
   public readonly accessories: PlatformAccessory[] = [];
 
-  private conn = HomeServerConnector()
+  private conn = new HomeServerConnector();
 
   constructor(
     public readonly log: Logger,
     public readonly config: PlatformConfig,
     public readonly api: API,
   ) {
-    this.log.debug('Finished initializing platform:', this.config.name);
-
     // When this event is fired it means Homebridge has restored all cached accessories from disk.
     // Dynamic Platform plugins should only register new accessories after this event was fired,
     // in order to ensure they weren't added to homebridge already. This event can also be used
     // to start discovery of new accessories.
 
-    const conn = HomeServerConnector.createConnection(this.config.hsUserName,
-      this.config.hsUserPw, 
-      {"host": this.config.hsIp, "port": this.config.hsdPort, "protocol": "wss"});
-
-    conn.onConnect = this.myConnectResponse;
-    conn.onDisconnect = this.myDisconnectResponse;
+    this.conn.createConnection(this.config.hsIp, this.config.hsPort, this.config.hsUserName, this.config.hsUserPw);
+    this.log.debug('Finished initializing platform:', this.config.name);
   }
-
-  myConnectResponse() {
-    this.log.info("Connected");
-  }
-
-  myDisconnectResponse() {
-    this.log.info("Disconnected");
-  }
-
 
   /**
    * This function is invoked when homebridge restores cached accessories from disk at startup.

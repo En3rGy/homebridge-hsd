@@ -9,7 +9,8 @@
         "title": "Homeserver IP",
         "type": "string",
         "required": true,
-        "default": ""
+        "default": "",
+        "format": "ipv4"
       },
       "hsUserName": {
         "title": "HS user name",
@@ -27,7 +28,123 @@
         "title": "hsd Port",
         "type": "number",
         "required": true,
-        "default": "6720"
+        "default": "443"
+      },
+      "devices": {
+        "title": "Devices",
+        "type": "array",
+        "items": {
+          "DeviceName": {
+            "title": "Device Name",
+            "type": "string",
+            "required": true
+          },
+          "Services": {
+            "type": "array",
+            "items": {
+              "ServiceType" : {
+                "titel": "Service Type",
+                "type": "string",
+                "required": true
+              },
+              "ServiceName": {
+                "titel": "Service Name",
+                "type": "string",
+                "required": true
+              },
+              "Characteristics": {
+                "type": "array",
+                "items": {
+                  "Type": {
+                    "titel": "Type",
+                    "type": "string",
+                    "required": true,
+                    "enum": [
+                      "Door",
+                      "Lightbulb",
+                      "Windows Covering"
+                    ]
+                  },
+                  "CurrentPosition": {
+                    "titel": "Current Position",
+                    "type": "string",
+                    "required": true,
+                    "Listen": {
+                      "type": "array"
+                    },
+                    "Set": {
+                      "type": "array"
+                    },  
+                    "condition": {
+                      "functionBody": "return model.schema.properties.Devices.Services.Characteristics.Type === 'Door' || model.schema.properties.Devices.Services.Characteristics.Type === 'Window Covering';"
+                    }
+                  },
+                  "PositionState": {
+                    "titel": "Position State",
+                    "type": "string",
+                    "required": true,
+                    "Listen": {
+                      "type": "array"
+                    },
+                    "Set": {
+                      "type": "array"
+                    },  
+                    "condition": {
+                      "functionBody": "return model.schema.properties.Devices.Services.Characteristics.Type === 'Door' || model.schema.properties.Devices.Services.Characteristics.Type === 'Window Covering';"                    
+                    }
+                  },
+                  "TargetPosition": {
+                    "titel": "Target Position",
+                    "type": "string",
+                    "required": true,
+                    "Listen": {
+                      "type": "array"
+                    },
+                    "Set": {
+                      "type": "array"
+                    },  
+                    "condition": {
+                      "functionBody": "return model.schema.properties.Devices.Services.Characteristics.Type === 'Door' || model.schema.properties.Devices.Services.Characteristics.Type === 'Window Covering';"
+                    }
+                  },
+                  "Name": {
+                    "titel": "Name",
+                    "type": "string",
+                    "required": false
+                  },
+                  "on": {
+                    "titel": "on",
+                    "type": "string",
+                    "required": true,
+                    "Listen": {
+                      "type": "array"
+                    },
+                    "Set": {
+                      "type": "array"
+                    },
+                    "condition": {
+                      "functionBody": "return model.schema.properties.Devices.Services.Characteristics.Type === 'Lightbulb';"
+                    }
+                  },
+                  "Brightness": {
+                    "titel": "Brightness",
+                    "type": "string",
+                    "required": true,
+                    "Listen": {
+                      "type": "array"
+                    },
+                    "Set": {
+                      "type": "array"
+                    },  
+                    "condition": {
+                      "functionBody": "return model.schema.properties.Devices.Services.Characteristics.Type === 'Lightbulb';"
+                    }
+                  }                  
+                }
+              }
+            }
+          }
+        }
       }      
     }
   }
