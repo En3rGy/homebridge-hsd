@@ -1,5 +1,5 @@
 import { API, DynamicPlatformPlugin, Logger, PlatformAccessory, PlatformConfig, Service, Characteristic } from 'homebridge';
-import { HomeServerConnector, CONNECTION_STATE } from './hs';
+import { HomeServerConnector } from './hs';
 
 import { PLATFORM_NAME, PLUGIN_NAME } from './settings';
 import { ExamplePlatformAccessory } from './platformAccessory';
