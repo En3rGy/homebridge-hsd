@@ -32,9 +32,14 @@ export class HsdPlatform implements DynamicPlatformPlugin {
       this.registerPlatformAccessories(api);
     });
 
-    this.log.debug(config.platform.toString());
+    this.log.info('Connecting to ' + this.config.hsIp + ':' + this.config.hsPort);
 
-    this.conn.createConnection(this.config.hsIp, this.config.hsPort, this.config.hsUserName, this.config.hsUserPw);
+    try {
+      this.conn.createConnection(this.config.hsIp, this.config.hsPort, this.config.hsUserName, this.config.hsUserPw);
+    } catch {
+      this.log.error('Error trying to connect to HS. Not connection available!');
+    }
+
     this.log.debug('Finished initializing platform:', this.config.name);
   }
 
