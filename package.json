@@ -13,8 +13,8 @@
     "url": "https://github.com/En3rGy/homebridge-hsd/issues"
   },
   "engines": {
-    "node": "^18.17.0",
-    "homebridge": "^1.6.0"
+    "node": ">=18.17.0",
+    "homebridge": ">=1.6.0"
   },
   "main": "dist/index.js",
   "scripts": {
