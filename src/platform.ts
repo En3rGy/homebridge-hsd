@@ -28,8 +28,26 @@ export class HsdPlatform implements DynamicPlatformPlugin {
     // in order to ensure they weren't added to homebridge already. This event can also be used
     // to start discovery of new accessories.
 
+    api.on('didFinishLaunching', () => {
+      this.registerPlatformAccessories(api);
+    });
+
+    this.log.debug(config.platform.toString());
+
     this.conn.createConnection(this.config.hsIp, this.config.hsPort, this.config.hsUserName, this.config.hsUserPw);
     this.log.debug('Finished initializing platform:', this.config.name);
+  }
+
+  /**
+   *
+   * @param api
+   */
+  registerPlatformAccessories(api: API) {
+    const uuid = api.hap.uuid.generate('hsd-knx');
+    if (!this.accessories.find(acessory => acessory.UUID === uuid)) {
+      const accessory = new this.api.platformAccessory('hsd-homematic', uuid);
+      api.registerPlatformAccessories('hsd-homematic plugin', 'hsd-Homematic', [accessory]);
+    }
   }
 
   /**
@@ -64,6 +82,7 @@ export class HsdPlatform implements DynamicPlatformPlugin {
       },
     ];
 
+    /*
     // loop over the discovered devices and register each one if it has not already been registered
     for (const device of exampleDevices) {
 
@@ -82,7 +101,7 @@ export class HsdPlatform implements DynamicPlatformPlugin {
 
         // if you need to update the accessory.context then you should run `api.updatePlatformAccessories`. eg.:
         // existingAccessory.context.device = device;
-        // this.api.updatePlatformAccessories([existingAccessory]);
+        this.api.updatePlatformAccessories([existingAccessory]);
 
         // create the accessory handler for the restored accessory
         // this is imported from `platformAccessory.ts`
@@ -91,7 +110,7 @@ export class HsdPlatform implements DynamicPlatformPlugin {
         // it is possible to remove platform accessories at any time using `api.unregisterPlatformAccessories`, eg.:
         // remove platform accessories when no longer present
         // this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [existingAccessory]);
-        // this.log.info('Removing existing accessory from cache:', existingAccessory.displayName);
+        this.log.info('Removing existing accessory from cache:', existingAccessory.displayName);
       } else {
         // the accessory does not yet exist, so we need to create it
         this.log.info('Adding new accessory:', device.exampleDisplayName);
@@ -111,5 +130,6 @@ export class HsdPlatform implements DynamicPlatformPlugin {
         this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
       }
     }
+    */
   }
 }

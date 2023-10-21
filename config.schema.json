@@ -30,7 +30,7 @@
         "required": true,
         "default": "443"
       },
-      "devices": {
+      "Devices": {
         "title": "Devices",
         "type": "array",
         "items": {
@@ -45,7 +45,12 @@
               "ServiceType" : {
                 "titel": "Service Type",
                 "type": "string",
-                "required": true
+                "required": true,
+                "enum": [
+                  "Door",
+                  "Lightbulb",
+                  "Windows Covering"
+                ]
               },
               "ServiceName": {
                 "titel": "Service Name",
@@ -55,16 +60,6 @@
               "Characteristics": {
                 "type": "array",
                 "items": {
-                  "Type": {
-                    "titel": "Type",
-                    "type": "string",
-                    "required": true,
-                    "enum": [
-                      "Door",
-                      "Lightbulb",
-                      "Windows Covering"
-                    ]
-                  },
                   "CurrentPosition": {
                     "titel": "Current Position",
                     "type": "string",
@@ -73,10 +68,21 @@
                       "type": "array"
                     },
                     "Set": {
-                      "type": "array"
+                      "type": "array",
+                      "items": {
+                        "hsEndpoint": {
+                          "titel": "Homeserver Endpoint",
+                          "type": "string",
+                          "required": true
+                        },
+                        "Description": {
+                          "titel": "Endpoint Description",
+                          "type": "string"
+                        }
+                      }
                     },  
                     "condition": {
-                      "functionBody": "return model.schema.properties.Devices.Services.Characteristics.Type === 'Door' || model.schema.properties.Devices.Services.Characteristics.Type === 'Window Covering';"
+                      "functionBody": "return model.schema.properties.Devices.Services.ServiceType === 'Door' || model.schema.properties.Devices.Services.ServiceType === 'Window Covering';"
                     }
                   },
                   "PositionState": {
@@ -84,13 +90,35 @@
                     "type": "string",
                     "required": true,
                     "Listen": {
-                      "type": "array"
+                      "type": "array",
+                      "items": {
+                        "hsEndpoint": {
+                          "titel": "Homeserver Endpoint",
+                          "type": "string",
+                          "required": true
+                        },
+                        "Description": {
+                          "titel": "Endpoint Description",
+                          "type": "string"
+                        }
+                      }
                     },
                     "Set": {
-                      "type": "array"
+                      "type": "array",
+                      "items": {
+                        "hsEndpoint": {
+                          "titel": "Homeserver Endpoint",
+                          "type": "string",
+                          "required": true
+                        },
+                        "Description": {
+                          "titel": "Endpoint Description",
+                          "type": "string"
+                        }
+                      }
                     },  
                     "condition": {
-                      "functionBody": "return model.schema.properties.Devices.Services.Characteristics.Type === 'Door' || model.schema.properties.Devices.Services.Characteristics.Type === 'Window Covering';"                    
+                      "functionBody": "return model.schema.properties.Devices.Services.ServiceType === 'Door' || model.schema.properties.Devices.Services.ServiceType === 'Window Covering';"                    
                     }
                   },
                   "TargetPosition": {
@@ -98,13 +126,35 @@
                     "type": "string",
                     "required": true,
                     "Listen": {
-                      "type": "array"
+                      "type": "array",
+                      "items": {
+                        "hsEndpoint": {
+                          "titel": "Homeserver Endpoint",
+                          "type": "string",
+                          "required": true
+                        },
+                        "Description": {
+                          "titel": "Endpoint Description",
+                          "type": "string"
+                        }
+                      }
                     },
                     "Set": {
-                      "type": "array"
+                      "type": "array",
+                      "items": {
+                        "hsEndpoint": {
+                          "titel": "Homeserver Endpoint",
+                          "type": "string",
+                          "required": true
+                        },
+                        "Description": {
+                          "titel": "Endpoint Description",
+                          "type": "string"
+                        }
+                      }
                     },  
                     "condition": {
-                      "functionBody": "return model.schema.properties.Devices.Services.Characteristics.Type === 'Door' || model.schema.properties.Devices.Services.Characteristics.Type === 'Window Covering';"
+                      "functionBody": "return model.schema.properties.Devices.Services.ServiceType === 'Door' || model.schema.properties.Devices.Services.ServiceType === 'Window Covering';"
                     }
                   },
                   "Name": {
@@ -117,13 +167,35 @@
                     "type": "string",
                     "required": true,
                     "Listen": {
-                      "type": "array"
+                      "type": "array",
+                      "items": {
+                        "hsEndpoint": {
+                          "titel": "Homeserver Endpoint",
+                          "type": "string",
+                          "required": true
+                        },
+                        "Description": {
+                          "titel": "Endpoint Description",
+                          "type": "string"
+                        }
+                      }
                     },
                     "Set": {
-                      "type": "array"
+                      "type": "array",
+                      "items": {
+                        "hsEndpoint": {
+                          "titel": "Homeserver Endpoint",
+                          "type": "string",
+                          "required": true
+                        },
+                        "Description": {
+                          "titel": "Endpoint Description",
+                          "type": "string"
+                        }
+                      }
                     },
                     "condition": {
-                      "functionBody": "return model.schema.properties.Devices.Services.Characteristics.Type === 'Lightbulb';"
+                      "functionBody": "return model.schema.properties.Devices.Services.ServiceType === 'Lightbulb';"
                     }
                   },
                   "Brightness": {
@@ -131,13 +203,35 @@
                     "type": "string",
                     "required": true,
                     "Listen": {
-                      "type": "array"
+                      "type": "array",
+                      "items": {
+                        "hsEndpoint": {
+                          "titel": "Homeserver Endpoint",
+                          "type": "string",
+                          "required": true
+                        },
+                        "Description": {
+                          "titel": "Endpoint Description",
+                          "type": "string"
+                        }
+                      }
                     },
                     "Set": {
-                      "type": "array"
+                      "type": "array",
+                      "items": {
+                        "hsEndpoint": {
+                          "titel": "Homeserver Endpoint",
+                          "type": "string",
+                          "required": true
+                        },
+                        "Description": {
+                          "titel": "Endpoint Description",
+                          "type": "string"
+                        }
+                      }
                     },  
                     "condition": {
-                      "functionBody": "return model.schema.properties.Devices.Services.Characteristics.Type === 'Lightbulb';"
+                      "functionBody": "return model.schema.properties.Devices.Services.ServiceType === 'Lightbulb';"
                     }
                   }                  
                 }
