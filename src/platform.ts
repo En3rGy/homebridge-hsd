@@ -2,7 +2,7 @@ import { API, DynamicPlatformPlugin, Logger, PlatformAccessory, PlatformConfig, 
 import { HomeServerConnector } from './hs';
 
 import { PLATFORM_NAME, PLUGIN_NAME } from './settings';
-import { ExamplePlatformAccessory } from './platformAccessory';
+import { HsdPlatformAccessory } from './platformAccessory';
 
 /**
  * HomebridgePlatform
@@ -50,8 +50,8 @@ export class HsdPlatform implements DynamicPlatformPlugin {
   registerPlatformAccessories(api: API) {
     const uuid = api.hap.uuid.generate('hsd-knx');
     if (!this.accessories.find(acessory => acessory.UUID === uuid)) {
-      const accessory = new this.api.platformAccessory('hsd-homematic', uuid);
-      api.registerPlatformAccessories('hsd-homematic plugin', 'hsd-Homematic', [accessory]);
+      const accessory = new this.api.platformAccessory('hsd-homebridge', uuid);
+      api.registerPlatformAccessories('hsd-heomebrige plugin', 'hsd-Homebridge', [accessory]);
     }
   }
 
