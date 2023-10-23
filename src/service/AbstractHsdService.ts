@@ -1,4 +1,4 @@
-import { KnxLink } from 'js-knx';
+import { HomeServerConnector } from '../hs';
 import { API, Service, WithUUID } from 'homebridge';
 
 import { HsdServiceConfig } from '../config';
@@ -13,7 +13,7 @@ abstract class AbstractHsdService {
 
   public constructor (
         protected api: API,
-        protected knx: KnxLink,
+        protected hsd: HomeServerConnector,
         protected accessory: HsdPlatformAccessory,
         protected config: HsdServiceConfig,
   ) {

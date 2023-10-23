@@ -1,140 +1,70 @@
-import { API, DynamicPlatformPlugin, Logger, PlatformAccessory, PlatformConfig, Service, Characteristic } from 'homebridge';
+import { API, APIEvent, DynamicPlatformPlugin, Logging, PlatformAccessory, PlatformConfig, UnknownContext } from 'homebridge';
 import { HomeServerConnector } from './hs';
 
+import { HsdPlatformAccessory, isHsdPlatformConfig } from './hsdPlatformAccessory';
+import { HsdAccessory } from './hsdAccessory';
+
 import { PLATFORM_NAME, PLUGIN_NAME } from './settings';
-import { HsdPlatformAccessory } from './platformAccessory';
+import { HsdPlatformConfig } from './config';
 
-/**
- * HomebridgePlatform
- * This class is the main constructor for your plugin, this is where you should
- * parse the user config and discover/register accessories with Homebridge.
- */
 export class HsdPlatform implements DynamicPlatformPlugin {
-  public readonly Service: typeof Service = this.api.hap.Service;
-  public readonly Characteristic: typeof Characteristic = this.api.hap.Characteristic;
+  private cachedAccessories: Map<string, HsdPlatformAccessory> = new Map();
+  private hsdAccessories: Map<string, HsdAccessory> = new Map();
+  private config: HsdPlatformConfig;
 
-  // this is used to track restored cached accessories
-  public readonly accessories: PlatformAccessory[] = [];
+  private async connect (): Promise<HomeServerConnector> {
+    const link = new HomeServerConnector();
+    link.connect(this.config.hsIp, this.config.hsPort, this.config.hsUserName, this.config.hsUserPw);
+    this.logger.info(`HSD IP gateway ${this.config.hsIp} connection established.`);
 
-  private conn = new HomeServerConnector();
-
-  constructor(
-    public readonly log: Logger,
-    public readonly config: PlatformConfig,
-    public readonly api: API,
-  ) {
-    // When this event is fired it means Homebridge has restored all cached accessories from disk.
-    // Dynamic Platform plugins should only register new accessories after this event was fired,
-    // in order to ensure they weren't added to homebridge already. This event can also be used
-    // to start discovery of new accessories.
-
-    api.on('didFinishLaunching', () => {
-      this.registerPlatformAccessories(api);
+    this.api.on(APIEvent.SHUTDOWN, async () => {
+      await link.disconnect();
+      this.logger.debug(`KNX IP gateway ${this.config.hsdIpGatewayIp} connection closed.`);
     });
 
-    this.log.info('Connecting to ' + this.config.hsIp + ':' + this.config.hsPort);
+    return link;
+  }
 
-    try {
-      this.conn.createConnection(this.config.hsIp, this.config.hsPort, this.config.hsUserName, this.config.hsUserPw);
-    } catch {
-      this.log.error('Error trying to connect to HS. Not connection available!');
+  public constructor (private logger: Logging, config: PlatformConfig, private api: API) {
+    if (!isHsdPlatformConfig(config)) {
+      throw new Error('Invalid configuration');
+    } else {
+      this.config = config;
     }
 
-    this.log.debug('Finished initializing platform:', this.config.name);
+    api.on(APIEvent.DID_FINISH_LAUNCHING, async () => {
+      this.configureAccessories(await this.connect());
+    });
   }
 
-  /**
-   *
-   * @param api
-   */
-  registerPlatformAccessories(api: API) {
-    const uuid = api.hap.uuid.generate('hsd-knx');
-    if (!this.accessories.find(acessory => acessory.UUID === uuid)) {
-      const accessory = new this.api.platformAccessory('hsd-homebridge', uuid);
-      api.registerPlatformAccessories('hsd-heomebrige plugin', 'hsd-Homebridge', [accessory]);
+  public configureAccessory (accessory: PlatformAccessory<UnknownContext>): void {
+    this.cachedAccessories.set(accessory.UUID, accessory as HsdPlatformAccessory);
+  }
+
+  private configureAccessories (hsd: HomeServerConnector): void {
+    for (const config of this.config.accessories) {
+      const hsdAccessory = new HsdAccessory(config, this.logger, hsd, this.api);
+      this.hsdAccessories.set(HsdAccessory.uuid, hsdAccessory);
     }
-  }
 
-  /**
-   * This function is invoked when homebridge restores cached accessories from disk at startup.
-   * It should be used to setup event handlers for characteristics and update respective values.
-   */
-  configureAccessory(accessory: PlatformAccessory) {
-    this.log.info('Loading accessory from cache:', accessory.displayName);
-
-    // add the restored accessory to the accessories cache so we can track if it has already been registered
-    this.accessories.push(accessory);
-  }
-
-  /**
-   * This is an example method showing how to register discovered accessories.
-   * Accessories must only be registered once, previously created accessories
-   * must not be registered again to prevent "duplicate UUID" errors.
-   */
-  discoverDevices() {
-
-    // EXAMPLE ONLY
-    // A real plugin you would discover accessories from the local network, cloud services
-    // or a user-defined array in the platform config.
-    const exampleDevices = [
-      {
-        exampleUniqueId: 'ABCD',
-        exampleDisplayName: 'Bedroom',
-      },
-      {
-        exampleUniqueId: 'EFGH',
-        exampleDisplayName: 'Kitchen',
-      },
-    ];
-
-    /*
-    // loop over the discovered devices and register each one if it has not already been registered
-    for (const device of exampleDevices) {
-
-      // generate a unique id for the accessory this should be generated from
-      // something globally unique, but constant, for example, the device serial
-      // number or MAC address
-      const uuid = this.api.hap.uuid.generate(device.exampleUniqueId);
-
-      // see if an accessory with the same uuid has already been registered and restored from
-      // the cached devices we stored in the `configureAccessory` method above
-      const existingAccessory = this.accessories.find(accessory => accessory.UUID === uuid);
-
-      if (existingAccessory) {
-        // the accessory already exists
-        this.log.info('Restoring existing accessory from cache:', existingAccessory.displayName);
-
-        // if you need to update the accessory.context then you should run `api.updatePlatformAccessories`. eg.:
-        // existingAccessory.context.device = device;
-        this.api.updatePlatformAccessories([existingAccessory]);
-
-        // create the accessory handler for the restored accessory
-        // this is imported from `platformAccessory.ts`
-        new ExamplePlatformAccessory(this, existingAccessory);
-
-        // it is possible to remove platform accessories at any time using `api.unregisterPlatformAccessories`, eg.:
-        // remove platform accessories when no longer present
-        // this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [existingAccessory]);
-        this.log.info('Removing existing accessory from cache:', existingAccessory.displayName);
-      } else {
-        // the accessory does not yet exist, so we need to create it
-        this.log.info('Adding new accessory:', device.exampleDisplayName);
-
-        // create a new accessory
-        const accessory = new this.api.platformAccessory(device.exampleDisplayName, uuid);
-
-        // store a copy of the device object in the `accessory.context`
-        // the `context` property can be used to store any data about the accessory you may need
-        accessory.context.device = device;
-
-        // create the accessory handler for the newly create accessory
-        // this is imported from `platformAccessory.ts`
-        new ExamplePlatformAccessory(this, accessory);
-
-        // link the accessory to your platform
-        this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
+    for (const accessory of this.cachedAccessories.values()) {
+      if (!this.hsdAccessories.has(accessory.UUID)) {
+        this.logger.debug('unregistering unconfigured knx accessory', accessory.displayName);
+        this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
       }
     }
-    */
+
+    for (const knxAccessory of this.hsdAccessories.values()) {
+      const accessory = this.cachedAccessories.get(knxAccessory.uuid) ?? knxAccessory.register();
+
+      try {
+        knxAccessory.setupServices(accessory);
+
+      } catch (e) {
+        this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
+        this.logger.debug('unregistered knx accessory', accessory.displayName);
+        throw e;
+      }
+    }
   }
 }

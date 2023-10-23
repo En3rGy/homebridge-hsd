@@ -1,7 +1,7 @@
 import { API } from 'homebridge';
 
 import { PLATFORM_NAME, PLUGIN_NAME } from './settings';
-import { HsdPlatform } from './platform';
+import { HsdPlatform } from './hsdPlatform';
 
 /**
  * This method registers the platform with Homebridge

@@ -54,7 +54,7 @@ class HsdAccessory {
       switch (service.id) {
 
         case 'Lightbulb':
-          this.services.push(new Lightbulb(this.api, this.knx, accessory, service));
+          this.services.push(new Lightbulb(this.api, this.hsd, accessory, service));
           break;
 
         default:

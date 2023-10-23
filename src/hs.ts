@@ -36,7 +36,7 @@ export class HomeServerConnector {
    * @param user
    * @param pw
    */
-  createConnection(hsIp: string, hsPort: number, user: string, pw: string) {
+  connect(hsIp: string, hsPort: number, user: string, pw: string) {
     const hostname = hsIp;
     const port = hsPort;
     const prot = 'wss';
@@ -145,8 +145,9 @@ export class HomeServerConnector {
   }
 
   /**
-   *
-   * @param keys
+   * Subscribes to a list of given endpoints.
+   * @param keys List of entpoints to subscribe
+   * @returns True if subscription was successfull.
    */
   subscribe(keys: string[]): boolean {
     const msg = {'type': 'subscribe', 'param': {'keys': keys, 'context': this._getNewTransactionId()}};
@@ -158,9 +159,10 @@ export class HomeServerConnector {
   }
 
   /**
-   *
-   * @param key
-   * @param value
+   * Writes the given value to the endpoint
+   * @param key Name of endpoint, e.g. CO@1_2_3
+   * @param value Value to set
+   * @returns True if set was successfull.
    */
   setCo(key: string, value: string|number): boolean {
 
@@ -174,12 +176,11 @@ export class HomeServerConnector {
   }
 
   /**
-   *
-   * @param key
-   * @param value
+   * Request the value of the given endpoint from Homeserver
+   * @param key Name of endpoint, e.g. CO@1_2_3
+   * @returns True if get was successfull.
    */
   getCo(key: string): boolean {
-    //const param = {'context': this._getNewTransactionId(), 'key': key, 'method': 'get'};
     const param = {'key': key, 'method': 'get'};
     return this._call(param);
   }
@@ -199,6 +200,14 @@ export class HomeServerConnector {
     return false;
   }
 
+  /**
+   *
+   * @param key
+   * @param tags
+   * @param search
+   * @param meta
+   * @returns True if request was successfull.
+   */
   select(key: string, tags: string[], search: string, meta: boolean): boolean {
     const msg = {'type': 'select', 'param': {}};
     msg['param']['context'] = this._getNewTransactionId();
