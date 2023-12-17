@@ -12,23 +12,6 @@
     },
     {
       "type": "section",
-      "title": "Gateway Speed",
-      "expandable": true,
-      "expanded": false,
-      "items": [
-        {
-          "key": "maxConcurrentMessages"
-        },
-        {
-          "key": "maxTelegramsPerSecond"
-        },
-        {
-          "key": "readTimeout"
-        }
-      ]
-    },
-    {
-      "type": "section",
       "title": "Accessories",
       "expandable": true,
       "expanded": false,
@@ -59,7 +42,7 @@
                     },
                     {
                       "key": "accessories[].services[].endpoints",
-                      "title": "KNX Groups Address",
+                      "title": "Homeserver Endpoints",
                       "expandable": true,
                       "expanded": false,
                       "type": "section",
@@ -179,36 +162,6 @@
                         "title": "Switch",
                         "enum": [
                           "Switch"
-                        ]
-                      },
-                      {
-                        "title": "Fan v2",
-                        "enum": [
-                          "Fanv2"
-                        ]
-                      },
-                      {
-                        "title": "CO2 Sensor",
-                        "enum": [
-                          "CarbonDioxideSensor"
-                        ]
-                      },
-                      {
-                        "title": "Humidity Sensor",
-                        "enum": [
-                          "HumiditySensor"
-                        ]
-                      },
-                      {
-                        "title": "Temperature Sensor",
-                        "enum": [
-                          "TemperatureSensor"
-                        ]
-                      },
-                      {
-                        "title": "Thermostat",
-                        "enum": [
-                          "Thermostat"
                         ]
                       }
                     ]

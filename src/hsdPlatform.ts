@@ -44,7 +44,7 @@ export class HsdPlatform implements DynamicPlatformPlugin {
   private configureAccessories (hsd: HomeServerConnector): void {
     for (const config of this.config.accessories) {
       const hsdAccessory = new HsdAccessory(config, this.logger, hsd, this.api);
-      this.hsdAccessories.set(HsdAccessory.uuid, hsdAccessory);
+      this.hsdAccessories.set(hsdAccessory.uuid, hsdAccessory);
     }
 
     for (const accessory of this.cachedAccessories.values()) {

@@ -5,6 +5,7 @@ import { HsdPlatformAccessory } from '../hsdPlatformAccessory';
 import { addOnCharacteristic } from './characteristic/On';
 import { HsdServiceConfig } from '../config';
 import { AbstractHsdService } from './AbstractHsdService';
+import { addListener } from 'process';
 
 export class Lightbulb extends AbstractHsdService {
 

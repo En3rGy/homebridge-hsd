@@ -15,8 +15,13 @@ export class HomeServerConnector {
   private _ws: WebSocket.WebSocket | null = null;
   private _connState = CONNECTION_STATE.INIT;
   private _transactionIdCnt = 0;
-  private _msgQueue = {};
+  private _listeners = {};
+  private _msgQueu = {};
+  private _waitForMsg = true;
 
+  /**
+   *
+   */
   constructor() {
     //
   }
@@ -74,24 +79,44 @@ export class HomeServerConnector {
     const code = jsonMsg.code;
     const type = jsonMsg.type;
 
-    // const context = jsonMsg.request.context;
-
     if (code !== 0) {
       console.error('Received code ' + code);
       return false;
     }
 
     let data: string;
+    let endpoint: string;
+    let value: string|number;
+    let callback: () => object;
 
     if (type === 'select' || type === 'subscribe') {
       data = jsonMsg.data.items;
       console.log((new Date()).getTime() + ' ' + JSON.stringify(data, null, '  '));
+      /// @todo iterate over results
     } else if( type === 'call') {
-      const method = jsonMsg.method;
-      const key = jsonMsg.request.key;
+      const method = jsonMsg['request'].method;
+      endpoint = jsonMsg['request'].key;
 
       if (method === 'get') {
-        console.log((new Date()).getTime() + ' ' + key + ': ' + jsonMsg.data.value);
+        value = jsonMsg.data.value;
+        console.log((new Date()).getTime() + ' ' + endpoint + ': ' + value);
+
+        if (method in this._msgQueu) {
+          if (endpoint in this._msgQueu[method]) {
+            console.debug((new Date()).getTime() + ' ' + 'Found recived method and endpoint in msgQue'); // @todo do something
+            this._msgQueu[method][endpoint] = value;
+          }
+        }
+
+        this._waitForMsg = false;
+
+
+      } else {
+        value = 0;
+      }
+
+      if ( endpoint in this._listeners) {
+        this._listeners[endpoint].updateValue(value);
       }
     } else {
       console.log((new Date()).getTime() + ' ' + type);
@@ -125,23 +150,56 @@ export class HomeServerConnector {
    * @param obj
    * @returns
    */
-  sendJson(obj: object, retries = 3): boolean {
+  sendJson(msg: object, retries = 3): string|number {
+
+    // Create a promise to wait for the response
+
     if (this.getConnState() !== CONNECTION_STATE.OPEN) {
       if (retries > 0) {
         setTimeout(() => {
-          this.sendJson(obj, retries - 1);
+          this.sendJson(msg, retries - 1);
         }, 1000);
       } else {
         console.error('Max retries reached. Connction to HS failed.');
-        return false;
       }
     } else {
-      const s = JSON.stringify(obj);
-      console.log((new Date()).getTime() + ' Send message: ' + s);
-      this._ws.send(s);
-      return true;
+      if (msg['type'] === 'call') {
+        const params: object = msg['param'];
+        const method = params['method'];
+        const key: string = params['key'];
+
+        if (method in this._msgQueu) {
+          //
+        } else {
+          this._msgQueu[method] = {};
+        }
+
+        const smsg = JSON.stringify(msg);
+        console.log((new Date()).getTime() + ' Send message: ' + smsg);
+        this._waitForMsg = true;
+        this._ws.send(smsg);
+
+        if (msg['type'] === 'call') {
+          while (this._waitForMsg) {
+            // loop
+          }
+          if (key in this._msgQueu[method]) {
+            return this._msgQueu[method][key];
+          }
+        }
+      }
     }
-    return false;
+    return '';
+  }
+
+  /**
+   *
+   * @param listener
+   * @param endpoint
+   */
+  addListener(listener: object, endpoint: string) {
+    this._listeners[endpoint] = listener;
+    this.subscribe([endpoint]);
   }
 
   /**
@@ -152,7 +210,6 @@ export class HomeServerConnector {
   subscribe(keys: string[]): boolean {
     const msg = {'type': 'subscribe', 'param': {'keys': keys, 'context': this._getNewTransactionId()}};
     if (this.sendJson(msg)) {
-      this._msgQueue[msg['param']['context']] = {ts: (new Date()).getTime()};
       return true;
     }
     return false;
@@ -172,7 +229,12 @@ export class HomeServerConnector {
       param.value = btoa(value);
     }
 
-    return this._call(param);
+    const msg = {'type': 'call', 'param': param};
+
+    if (this.sendJson(msg)) {
+      return true;
+    }
+    return false;
   }
 
   /**
@@ -182,19 +244,9 @@ export class HomeServerConnector {
    */
   getCo(key: string): boolean {
     const param = {'key': key, 'method': 'get'};
-    return this._call(param);
-  }
-
-  /**
-   *
-   * @param key
-   */
-  _call(param: object): boolean {
-    const msg = {'type': 'call', 'param': {}};
-    msg['param'] = param;
+    const msg = {'type': 'call', 'param': param};
 
     if (this.sendJson(msg)) {
-      this._msgQueue[msg['param']['context']] = {ts: (new Date()).getTime()};
       return true;
     }
     return false;
@@ -218,7 +270,6 @@ export class HomeServerConnector {
     msg['param']['from'] = 0;
     msg['param']['count'] = 1000;
     if (this.sendJson(msg)) {
-      this._msgQueue[msg['param']['context']] = {ts: (new Date()).getTime()};
       return true;
     }
     return false;

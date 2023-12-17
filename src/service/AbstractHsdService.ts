@@ -4,7 +4,7 @@ import { API, Service, WithUUID } from 'homebridge';
 import { HsdServiceConfig } from '../config';
 import { HsdPlatformAccessory } from '../hsdPlatformAccessory';
 
-abstract class AbstractHsdService {
+export abstract class AbstractHsdService {
 
   protected getService (service: WithUUID<typeof Service>): Service {
     return this.accessory.getService(service) ??
@@ -20,5 +20,3 @@ abstract class AbstractHsdService {
     //
   }
 }
-
-export { AbstractHsdService };
