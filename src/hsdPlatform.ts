@@ -13,6 +13,7 @@ export class HsdPlatform implements DynamicPlatformPlugin {
   private config: HsdPlatformConfig;
 
   private async connect (): Promise<HomeServerConnector> {
+    this.logger.info('hsdPlatform.ts | Entering connect()');
     const link = new HomeServerConnector();
     link.connect(this.config.hsIp, this.config.hsPort, this.config.hsUserName, this.config.hsUserPw);
     this.logger.info(`HSD IP gateway ${this.config.hsIp} connection established.`);
@@ -26,8 +27,9 @@ export class HsdPlatform implements DynamicPlatformPlugin {
   }
 
   public constructor (private logger: Logging, config: PlatformConfig, private api: API) {
+    this.logger.info('hsdPlatform.ts | constructor');
     if (!isHsdPlatformConfig(config)) {
-      throw new Error('Invalid configuration');
+      throw new Error('hsdPlatform.ts | Invalid configuration');
     } else {
       this.config = config;
     }
