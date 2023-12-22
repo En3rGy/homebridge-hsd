@@ -4,5 +4,5 @@ import { HsdAccessoryConfig, HsdPlatformConfig } from './config';
 export type HsdPlatformAccessory = PlatformAccessory<HsdAccessoryConfig>;
 
 export const isHsdPlatformConfig = (config: PlatformConfig): config is HsdPlatformConfig => {
-  return 'knxIpGatewayIp' in config;
+  return 'hsIp' in config;
 };
