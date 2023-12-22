@@ -12,6 +12,19 @@
       "placeholder": "192.168.x.x"
     },
     {
+      "key": "hsUserName",
+      "title": "HS User Name"
+    },    
+    {
+      "key": "hsUserPw",
+      "title": "HS Password"
+    },
+    {
+      "key": "hsPort",
+      "title": "HS Port",
+      "placeholder": "443"
+    },         
+    {
       "type": "section",
       "title": "Accessories",
       "expandable": true,
