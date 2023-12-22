@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import * as WebSocket from 'ws';
+import { Logging } from 'homebridge';
 
 export enum CONNECTION_STATE {
   INIT = 0,
@@ -22,7 +23,7 @@ export class HomeServerConnector {
   /**
    *
    */
-  constructor() {
+  constructor(private logger: Logging) {
     //
   }
 
@@ -51,7 +52,7 @@ export class HomeServerConnector {
 
     this._ws.on('open', () => {
       this._connState = CONNECTION_STATE.OPEN;
-      console.log((new Date()).getTime() + ' Conncted to HS');
+      this.logger.info('Conncted to HS');
     });
 
     this._ws.on('message', (message: string) => {
@@ -60,12 +61,12 @@ export class HomeServerConnector {
 
     this._ws.on('close', (code:number, reason:string) => {
       this._connState = CONNECTION_STATE.CLOSED;
-      console.log((new Date()).getTime() + ' Connection with HS closed ' + code + reason);
+      this.logger.info('Connection with HS closed ' + code + reason);
     });
 
     this._ws.on('error', (errorMsg: string) => {
       this._connState = CONNECTION_STATE.CLOSED;
-      console.log((new Date()).getTime() + 'Error ' + 'code: ' + errorMsg);
+      this.logger.info('Error ' + 'code: ' + errorMsg);
     });
   }
 
@@ -74,13 +75,13 @@ export class HomeServerConnector {
    */
   receivedMessage(message: string): boolean {
     const jsonMsg = JSON.parse(message);
-    console.log((new Date()).getTime() + ' Received from HS: ' + message);
+    this.logger.info('Received from HS: ' + message);
 
     const code = jsonMsg.code;
     const type = jsonMsg.type;
 
     if (code !== 0) {
-      console.error('Received code ' + code);
+      this.logger.info('Received code ' + code);
       return false;
     }
 
@@ -99,11 +100,11 @@ export class HomeServerConnector {
 
       if (method === 'get') {
         value = jsonMsg.data.value;
-        console.log((new Date()).getTime() + ' ' + endpoint + ': ' + value);
+        this.logger.info(endpoint + ': ' + value);
 
         if (method in this._msgQueu) {
           if (endpoint in this._msgQueu[method]) {
-            console.debug((new Date()).getTime() + ' ' + 'Found recived method and endpoint in msgQue'); // @todo do something
+            this.logger.debug('Found recived method and endpoint in msgQue'); // @todo do something
             this._msgQueu[method][endpoint] = value;
           }
         }
@@ -119,7 +120,7 @@ export class HomeServerConnector {
         this._listeners[endpoint].updateValue(value);
       }
     } else {
-      console.log((new Date()).getTime() + ' ' + type);
+      this.logger.info(type);
     }
 
     return true;
@@ -133,7 +134,7 @@ export class HomeServerConnector {
       this._ws.close();
     }
     this._connState === CONNECTION_STATE.CLOSED;
-    console.log((new Date()).getTime() + ' Gently disconnected from HS.');
+    this.logger.info('Gently disconnected from HS.');
   }
 
   /**
@@ -175,7 +176,7 @@ export class HomeServerConnector {
         }
 
         const smsg = JSON.stringify(msg);
-        console.log((new Date()).getTime() + ' Send message: ' + smsg);
+        this.logger.info('Send message: ' + smsg);
         this._waitForMsg = true;
         this._ws.send(smsg);
 

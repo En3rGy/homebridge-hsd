@@ -3,7 +3,7 @@ import type { Service } from 'homebridge';
 
 type HsdServiceConfig = {
     id: Exclude<keyof typeof Service, 'prototype'>;
-    addresses: string[];
+    endpoints: string[];
     options: string[];
     name: string;
 };

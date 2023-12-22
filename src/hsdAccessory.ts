@@ -20,7 +20,7 @@ class HsdAccessory {
   private services: AbstractHsdService[] = [];
 
   private getAccessoryUUID (config: HsdAccessoryConfig): string {
-    const addresses = config.services.map(service => service.addresses.join(',')).join(',');
+    const addresses = config.services.map(service => service.endpoints.join(',')).join(',');
     return this.api.hap.uuid.generate(`${PLATFORM_NAME}.${this.config.name}.${addresses}`);
   }
 
