@@ -92,7 +92,7 @@ export class HomeServerConnector {
 
     if (type === 'select' || type === 'subscribe') {
       data = jsonMsg.data.items;
-      console.log((new Date()).getTime() + ' ' + JSON.stringify(data, null, '  '));
+      this.logger.info(JSON.stringify(data, null, '  '));
       /// @todo iterate over results
     } else if( type === 'call') {
       const method = jsonMsg['request'].method;
@@ -161,7 +161,7 @@ export class HomeServerConnector {
           this.sendJson(msg, retries - 1);
         }, 1000);
       } else {
-        console.error('Max retries reached. Connction to HS failed.');
+        this.logger.error('Max retries reached. Connction to HS failed.');
       }
     } else {
       if (msg['type'] === 'call') {
