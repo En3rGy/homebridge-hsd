@@ -220,7 +220,10 @@ export class HomeServerConnector {
             return this._msgQueu[method][key];
           }
         }
+      } else {
+        this.logger.warn('hs.ts | HomeServerConnector | Message type %s not implemented yet.', msg['type']);
       }
+
     }
     return '';
   }
