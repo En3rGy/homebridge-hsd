@@ -176,14 +176,14 @@ export class HomeServerConnector {
         }
 
         const smsg = JSON.stringify(msg);
-        this.logger.info('Send message: ' + smsg);
+        this.logger.info('hs.ts | Send message: ' + smsg);
         this._waitForMsg = true;
         this._ws.send(smsg);
 
         if (msg['type'] === 'call') {
-          while (this._waitForMsg) {
-            // loop
-          }
+          //while (this._waitForMsg) {
+          // loop
+          //}
           if (key in this._msgQueu[method]) {
             return this._msgQueu[method][key];
           }
