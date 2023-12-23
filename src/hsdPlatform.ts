@@ -47,11 +47,12 @@ export class HsdPlatform implements DynamicPlatformPlugin {
     for (const config of this.config.accessories) {
       const hsdAccessory = new HsdAccessory(config, this.logger, hsd, this.api);
       this.hsdAccessories.set(hsdAccessory.uuid, hsdAccessory);
+      this.logger.info('Loaded hsd accessory', hsdAccessory.displayName);
     }
 
     for (const accessory of this.cachedAccessories.values()) {
       if (!this.hsdAccessories.has(accessory.UUID)) {
-        this.logger.debug('unregistering unconfigured knx accessory', accessory.displayName);
+        this.logger.debug('Unregistering unconfigured hsd accessory', accessory.displayName);
         this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
       }
     }
@@ -64,7 +65,7 @@ export class HsdPlatform implements DynamicPlatformPlugin {
 
       } catch (e) {
         this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
-        this.logger.debug('unregistered knx accessory', accessory.displayName);
+        this.logger.debug('Unregistered hsd accessory', accessory.displayName);
         throw e;
       }
     }

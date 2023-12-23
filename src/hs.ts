@@ -209,6 +209,7 @@ export class HomeServerConnector {
    * @returns True if subscription was successfull.
    */
   subscribe(keys: string[]): boolean {
+    this.logger.info('Subscribing to', keys);
     const msg = {'type': 'subscribe', 'param': {'keys': keys, 'context': this._getNewTransactionId()}};
     if (this.sendJson(msg)) {
       return true;

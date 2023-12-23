@@ -10,7 +10,7 @@ export const addOnCharacteristic = (api: API,
   const on = service.getCharacteristic(api.hap.Characteristic.On);
 
   // @todo Implement waiting for retun value and getting it from hs.ts
-  hsd.addListener(reading => {
+  hsd.addListener(async reading => {
     on.updateValue(reading.value);
   }, getEndpoint);
 
