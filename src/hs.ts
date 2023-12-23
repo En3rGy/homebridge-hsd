@@ -24,7 +24,7 @@ export class HomeServerConnector {
   /**
    *
    */
-  constructor(private api: API, private logger: Logging) {
+  constructor(private logger: Logging) {
     //
   }
 
