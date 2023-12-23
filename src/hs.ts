@@ -117,7 +117,7 @@ export class HomeServerConnector {
       }
 
       if ( endpoint in this._listeners) {
-        this._listeners[endpoint].updateValue(value);
+        this._listeners[endpoint](value);
       }
     } else {
       this.logger.info(type);
@@ -182,7 +182,7 @@ export class HomeServerConnector {
 
         if (msg['type'] === 'call') {
           //while (this._waitForMsg) {
-          // loop
+          // @todo do something here ###
           //}
           if (key in this._msgQueu[method]) {
             return this._msgQueu[method][key];
