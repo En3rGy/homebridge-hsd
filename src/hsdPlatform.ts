@@ -13,23 +13,23 @@ export class HsdPlatform implements DynamicPlatformPlugin {
   private config: HsdPlatformConfig;
 
   private async connect (): Promise<HomeServerConnector> {
-    this.logger.info('hsdPlatform.ts | Entering connect()');
+    this.logger.info('hsdPlatform.ts | HsdPlatform | Entering connect()');
     const link = new HomeServerConnector(this.logger);
     link.connect(this.config.hsIp, this.config.hsPort, this.config.hsUserName, this.config.hsUserPw);
-    this.logger.info(`HSD IP gateway ${this.config.hsIp} connection established.`);
+    this.logger.info(`hsdPlatform.ts | HsdPlatform | HSD IP gateway ${this.config.hsIp} connection established.`);
 
     this.api.on(APIEvent.SHUTDOWN, async () => {
       await link.disconnect();
-      this.logger.debug(`KNX IP gateway ${this.config.hsdIpGatewayIp} connection closed.`);
+      this.logger.debug(`hsdPlatform.ts | HsdPlatform | hsd IP gateway ${this.config.hsdIpGatewayIp} connection closed.`);
     });
 
     return link;
   }
 
   public constructor (private logger: Logging, config: PlatformConfig, private api: API) {
-    this.logger.info('hsdPlatform.ts | constructor');
+    this.logger.info('hsdPlatform.ts | HsdPlatform | Constructor');
     if (!isHsdPlatformConfig(config)) {
-      throw new Error('hsdPlatform.ts | Invalid configuration');
+      throw new Error('hsdPlatform.ts | HsdPlatform | Invalid configuration');
     } else {
       this.config = config;
     }
@@ -47,12 +47,12 @@ export class HsdPlatform implements DynamicPlatformPlugin {
     for (const config of this.config.accessories) {
       const hsdAccessory = new HsdAccessory(config, this.logger, hsd, this.api);
       this.hsdAccessories.set(hsdAccessory.uuid, hsdAccessory);
-      this.logger.info('Loaded hsd accessory', hsdAccessory.displayName);
+      this.logger.info('hsdPlatform.ts | HsdPlatform | Loaded hsd accessory', hsdAccessory.displayName);
     }
 
     for (const accessory of this.cachedAccessories.values()) {
       if (!this.hsdAccessories.has(accessory.UUID)) {
-        this.logger.debug('Unregistering unconfigured hsd accessory', accessory.displayName);
+        this.logger.debug('hsdPlatform.ts | HsdPlatform | Unregistering unconfigured hsd accessory', accessory.displayName);
         this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
       }
     }
@@ -65,7 +65,7 @@ export class HsdPlatform implements DynamicPlatformPlugin {
 
       } catch (e) {
         this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
-        this.logger.debug('Unregistered hsd accessory', accessory.displayName);
+        this.logger.debug('hsdPlatform.ts | HsdPlatform | Unregistered hsd accessory', accessory.displayName);
         throw e;
       }
     }

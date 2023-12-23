@@ -1,4 +1,5 @@
 /* eslint-disable no-console */
+import { API } from 'homebridge';
 import * as WebSocket from 'ws';
 import { Logging } from 'homebridge';
 
@@ -23,7 +24,7 @@ export class HomeServerConnector {
   /**
    *
    */
-  constructor(private logger: Logging) {
+  constructor(private api: API, private logger: Logging) {
     //
   }
 
@@ -75,10 +76,11 @@ export class HomeServerConnector {
    */
   receivedMessage(message: string): boolean {
     const jsonMsg = JSON.parse(message);
-    this.logger.info('Received from HS: ' + message);
-
     const code = jsonMsg.code;
     const type = jsonMsg.type;
+
+    this.logger.info('hs.ts | HomeserverConnector | Received from HS: ' +
+                     message + ' with code ' + String(code) + ' and type ' + String(type));
 
     if (code !== 0) {
       this.logger.info('Received code ' + code);
@@ -88,7 +90,7 @@ export class HomeServerConnector {
     let data: string;
     let endpoint: string;
     let value: string|number;
-    let callback: () => object;
+    // let callback: () => object;
 
     if (type === 'select' || type === 'subscribe') {
       data = jsonMsg.data.items;
@@ -100,7 +102,8 @@ export class HomeServerConnector {
 
       if (method === 'get') {
         value = jsonMsg.data.value;
-        this.logger.info(endpoint + ': ' + value);
+        this.logger.info('hs.ts | HomeserverConnector | ' + endpoint + ': ' + value);
+        this.setCo(endpoint, value);
 
         if (method in this._msgQueu) {
           if (endpoint in this._msgQueu[method]) {
