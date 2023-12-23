@@ -2,6 +2,7 @@
 import { API } from 'homebridge';
 import * as WebSocket from 'ws';
 import { Logging } from 'homebridge';
+import { HsdAccessory } from './hsdAccessory';
 
 export enum CONNECTION_STATE {
   INIT = 0,
@@ -21,10 +22,13 @@ export class HomeServerConnector {
   private _msgQueu = {};
   private _waitForMsg = true;
 
+  private requestPromiseResolver: Map<string, (value: string) => void> = new Map();
+  private requestPromiseRejecter: Map<string, (reason?: any) => void> = new Map();
+
   /**
    *
    */
-  constructor(private logger: Logging) {
+  constructor(private api: API, private logger: Logging, private accessory: Map<string, HsdAccessory>) {
     //
   }
 
@@ -103,7 +107,11 @@ export class HomeServerConnector {
       if (method === 'get') {
         value = jsonMsg.data.value;
         this.logger.info('hs.ts | HomeserverConnector | ' + endpoint + ': ' + value);
-        this.setCo(endpoint, value);
+
+        // returns the get value if getCo was called before
+        if (this.requestPromiseResolver.has(endpoint)) {
+          this.requestPromiseResolver[endpoint](String(value));
+        }
 
         if (method in this._msgQueu) {
           if (endpoint in this._msgQueu[method]) {
@@ -245,16 +253,18 @@ export class HomeServerConnector {
   /**
    * Request the value of the given endpoint from Homeserver
    * @param key Name of endpoint, e.g. CO@1_2_3
-   * @returns True if get was successfull.
+   * @returns True the characteristic value received from Homeserver.
    */
-  getCo(key: string): boolean {
+  getCo(key: string): Promise<string> {
     const param = {'key': key, 'method': 'get'};
     const msg = {'type': 'call', 'param': param};
 
-    if (this.sendJson(msg)) {
-      return true;
-    }
-    return false;
+    return new Promise<string>((resolve, reject) => {
+      this.requestPromiseResolver.set(key, resolve);
+      this.requestPromiseRejecter.set(key, reject);
+
+      this.sendJson(msg);
+    });
   }
 
   /**

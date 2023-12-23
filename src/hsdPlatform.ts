@@ -14,7 +14,7 @@ export class HsdPlatform implements DynamicPlatformPlugin {
 
   private async connect (): Promise<HomeServerConnector> {
     this.logger.info('hsdPlatform.ts | HsdPlatform | Entering connect()');
-    const link = new HomeServerConnector(this.logger);
+    const link = new HomeServerConnector(this.api, this.logger, this.hsdAccessories);
     link.connect(this.config.hsIp, this.config.hsPort, this.config.hsUserName, this.config.hsUserPw);
     this.logger.info(`hsdPlatform.ts | HsdPlatform | HSD IP gateway ${this.config.hsIp} connection established.`);
 
