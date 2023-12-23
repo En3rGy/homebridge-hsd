@@ -24,6 +24,7 @@ export class HomeServerConnector {
 
   private requestPromiseResolver: Map<string, (value: string) => void> = new Map();
   private requestPromiseRejecter: Map<string, (reason?: any) => void> = new Map();
+  private lastSet: Map<string, string> = new Map();
 
   /**
    *
@@ -83,11 +84,10 @@ export class HomeServerConnector {
     const code = jsonMsg.code;
     const type = jsonMsg.type;
 
-    this.logger.info('hs.ts | HomeserverConnector | Received from HS: ' +
-                     message + ' with code ' + String(code) + ' and type ' + String(type));
+    this.logger.info('hs.ts | HomeserverConnector | Received message from HS with code', String(code));
 
     if (code !== 0) {
-      this.logger.info('Received code ' + code);
+      this.logger.info('hs.ts | HomeserverConnector | Received message', jsonMsg);
       return false;
     }
 
@@ -104,9 +104,10 @@ export class HomeServerConnector {
       const method = jsonMsg['request'].method;
       endpoint = jsonMsg['request'].key;
 
+      // ### reply on previous get call ###
       if (method === 'get') {
         value = jsonMsg.data.value;
-        this.logger.info('hs.ts | HomeserverConnector | ' + endpoint + ': ' + value);
+        this.logger.info('hs.ts | HomeserverConnector | Received ' + endpoint + ': ' + value);
 
         // returns the get value if getCo was called before
         const resolver = this.requestPromiseResolver.get(endpoint);
@@ -126,14 +127,24 @@ export class HomeServerConnector {
 
         this._waitForMsg = false;
 
+      // ### reply on previous set call ###
+      } else if (method === 'set') {
+        // returns the get value if getCo was called before
+        const resolver = this.requestPromiseResolver.get(endpoint);
 
+        if (resolver) {
+          resolver(String(this.lastSet.get(endpoint)));
+          this.requestPromiseResolver.delete(endpoint);
+          this.requestPromiseRejecter.delete(endpoint);
+          this.lastSet.delete(endpoint);
+        }
       } else {
         value = 0;
       }
 
-      if ( endpoint in this._listeners) {
+      /*if ( endpoint in this._listeners) {
         this._listeners[endpoint](value);
-      }
+      }*/
     } else {
       this.logger.info(type);
     }
@@ -249,6 +260,7 @@ export class HomeServerConnector {
     const msg = {'type': 'call', 'param': param};
 
     if (this.sendJson(msg)) {
+      this.lastSet.set(key, String(value));
       return true;
     }
     return false;
