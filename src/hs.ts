@@ -109,8 +109,12 @@ export class HomeServerConnector {
         this.logger.info('hs.ts | HomeserverConnector | ' + endpoint + ': ' + value);
 
         // returns the get value if getCo was called before
-        if (this.requestPromiseResolver.has(endpoint)) {
-          this.requestPromiseResolver[endpoint](String(value));
+        const resolver = this.requestPromiseResolver.get(endpoint);
+
+        if (resolver) {
+          resolver(String(value));
+          this.requestPromiseResolver.delete(endpoint);
+          this.requestPromiseRejecter.delete(endpoint);
         }
 
         if (method in this._msgQueu) {
