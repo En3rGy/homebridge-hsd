@@ -6,6 +6,18 @@
 
 <span align="center">
 
+# Helpful Links
+* Homeserver URL Endpoint Documentation: \HS ICD\URL Endpoint\documentation\de
+* [Homebridge KNX Plugin](https://github.com/kodmax/homebridge-knx-eib) as template
+* [Homebridge Service Types](https://developers.homebridge.io/#/service)
+
+| Homebridge Entry | Note                  |
+| ---------------- | --------------------- |
+| Accessory        | This platform hsd-knx |
+| Service Type     | e.g. light bulb       |
+| Characteristic   | e.g. on               |
+
+
 # Homebridge Platform Plugin Template
 
 </span>
