@@ -16,6 +16,7 @@
 | Accessory        | This platform hsd-knx |
 | Service Type     | e.g. light bulb       |
 | Characteristic   | e.g. on               |
+| Endpoints        | HS URL Endpoint ID    |
 
 
 # Homebridge Platform Plugin Template
