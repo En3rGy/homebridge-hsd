@@ -103,9 +103,8 @@ export class HomeServerConnector {
         const callback = this._listeners.get(endpoint);
         if (callback) {
           callback(value);
-        }
-        else {
-          this.logger.warn("hs.ts | HomeserverConnector | No callback for %s registered", endpoint)
+        } else {
+          this.logger.warn('hs.ts | HomeserverConnector | No callback for %s registered', endpoint);
         }
       }
 
@@ -118,11 +117,10 @@ export class HomeServerConnector {
       const callback = this._listeners.get(endpoint);
       if (callback) {
         callback(value);
+      } else {
+        this.logger.warn('hs.ts | HomeserverConnector | No callback for %s registered', endpoint);
       }
-      else {
-        this.logger.warn("hs.ts | HomeserverConnector | No callback for %s registered", endpoint)
-      }
-    }      
+
     } else if( type === 'call') {
       const method = jsonMsg['request'].method;
       endpoint = jsonMsg['request'].key;
