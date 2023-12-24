@@ -2,114 +2,6 @@
   "pluginAlias": "hsd",
   "pluginType": "platform",
   "singular": false,
-  "layout": [
-    {
-      "key": "name"
-    },
-    {
-      "key": "hsIp",
-      "title": "HS IP",
-      "placeholder": "192.168.x.x"
-    },
-    {
-      "key": "hsUserName",
-      "title": "HS User Name"
-    },    
-    {
-      "key": "hsUserPw",
-      "title": "HS Password"
-    },
-    {
-      "key": "hsPort",
-      "title": "HS Port",
-      "placeholder": "443"
-    },         
-    {
-      "type": "section",
-      "title": "Accessories",
-      "expandable": true,
-      "expanded": false,
-      "items": [
-        {
-          "key": "accessories",
-          "notitle": true,
-          "type": "array",
-          "items": [
-            {
-              "type": "div",
-              "items": [
-                {
-                  "key": "accessories[].name"
-                },
-                {
-                  "key": "accessories[].services",
-                  "title": "Services",
-                  "type": "section",
-                  "expandable": true,
-                  "expanded": false,
-                  "items": [
-                    {
-                      "key": "accessories[].services[].name"
-                    },
-                    {
-                      "key": "accessories[].services[].id"
-                    },
-                    {
-                      "key": "accessories[].services[].endpoints",
-                      "title": "Homeserver Endpoints",
-                      "expandable": true,
-                      "expanded": false,
-                      "type": "section",
-                      "items": [
-                        {
-                          "type": "div",
-                          "items": [
-                            {
-                              "key": "accessories[].services[].endpoints[]"
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "key": "accessories[].services[].options",
-                      "title": "Options",
-                      "expandable": true,
-                      "expanded": false,
-                      "type": "section",
-                      "items": [
-                        {
-                          "type": "div",
-                          "items": [
-                            {
-                              "key": "accessories[].services[].options[]"
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "type": "section",
-      "title": "Notes",
-      "expandable": true,
-      "expanded": false,
-      "items": [
-        {
-          "key": "notes",
-          "type": "textarea",
-          "notitle": true
-        }
-      ]
-    }
-  ],
   "schema": {
     "type": "object",
     "properties": {
@@ -143,7 +35,8 @@
             "name": {
               "title": "Accessory Name",
               "type": "string",
-              "required": true
+              "required": true,
+              "description": "E.g. floor level"
             },
             "services": {
               "type": "array",
@@ -153,45 +46,50 @@
                   "name": {
                     "title": "Service Name",
                     "type": "string",
-                    "required": true
-                  },
-                  "id": {
-                    "title": "Service Type",
-                    "type": "string",
                     "required": true,
-                    "oneOf": [
-                      {
-                        "title": "Lightbulb",
-                        "enum": [
-                          "Lightbulb"
+                    "description": "Room Name"
+                  },
+                  "serviceType": {
+                    "type": "object",
+                    "properties": {
+                      "serviceTypeName": {
+                        "type": "string",
+                        "title": "Service Type",
+                        "required": true,
+                        "oneOf": [
+                          {
+                            "title": "Lightbulb", "enum": ["Lightbulb"]
+                          },
+                          {
+                            "title": "Outlet", "enum": ["Outlet"]
+                          },
+                          {
+                            "title": "Switch", "enum": ["Switch"]
+                          },
+                          {
+                            "title": "Garage Door Opener", "enum": ["GarageDoorOpemer"]
+                          }
                         ]
                       },
-                      {
-                        "title": "Outlet",
-                        "enum": [
-                          "Outlet"
-                        ]
-                      },
-                      {
-                        "title": "Switch",
-                        "enum": [
-                          "Switch"
-                        ]
+                      "characteristics": {
+                        "type": "array",
+                        "items": {
+                          "characteristicName": {
+                            "title": "Characteristics",
+                            "type": "string",
+                            "enum": [
+                              "On", "Current Door State", "Target Door State", "Obstruction Detection"
+                            ]
+                          },
+                          "endpoints": {
+                            "type": "array",
+                            "items": {
+                              "title": "Endpoints",
+                              "type": "string"
+                            }
+                          }
+                        }
                       }
-                    ]
-                  },
-                  "endpoints": {
-                    "type": "array",
-                    "items": {
-                      "title": "Endpoints",
-                      "type": "string"
-                    }
-                  },
-                  "options": {
-                    "type": "array",
-                    "items": {
-                      "title": "Option",
-                      "type": "string"
                     }
                   }
                 }
@@ -199,9 +97,6 @@
             }
           }
         }
-      },
-      "notes": {
-        "type": "string"
       }
     }
   },
