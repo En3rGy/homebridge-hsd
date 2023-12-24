@@ -85,8 +85,10 @@
                             "endpoints": {
                               "type": "array",
                               "items": {
-                                "title": "Endpoints",
-                                "type": "string"
+                                "endpointId": {
+                                  "title": "Endpoints",
+                                  "type": "string"
+                                }
                               }
                             }
                           }
@@ -102,6 +104,60 @@
       }
     }
   },
+  "layout": [
+    {
+      "key": "hsIp",
+      "title": "HS IP",
+      "placeholder": "192.168.x.x"
+    },
+    {
+      "key": "hsUserName",
+      "title": "HS User Name"
+    },
+    {
+      "key": "hsUserPw",
+      "title": "HS User Password"
+    },
+    {
+      "key": "hsPort",
+      "title": "HS Port"
+    },
+    {
+      "key": "accessories",
+      "type": "array",
+      "items": [
+        "accessories[].name",
+        {
+          "key": "accessories[].services",
+          "type": "array",
+          "items": [
+            "accessories[].services[].name",
+            {
+              "key": "accessories[].services[].serviceType",
+              "type": "array",
+              "items": [              
+                "accessories[].services[].serviceTypeName",
+                {
+                  "key": "accessories[].services[].characteristics",
+                  "type": "array",
+                  "items": [
+                    "accessories[].services[].characteristics[].characteristicName",
+                    {
+                      "key": "accessories[].services[].characteristics[].endpoints",
+                      "type": "array",
+                      "items": [
+                        "accessories[].services[].characteristics[].endpoints[].endpointId"
+                      ]
+                    }
+                  ]                  
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
   "form": null,
   "display": null
 }
