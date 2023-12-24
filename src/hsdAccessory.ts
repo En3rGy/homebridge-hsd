@@ -63,7 +63,7 @@ class HsdAccessory {
           break;
 
         default:
-          throw new Error(`<${service.id}> service not supported`);
+          throw new Error(`<${service.serviceType}> service not supported`);
       }
 
     }
