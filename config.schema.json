@@ -36,7 +36,7 @@
               "title": "Accessory Name",
               "type": "string",
               "required": true,
-              "description": "E.g. floor level"
+              "description": "E.g. Room"
             },
             "services": {
               "type": "array",
@@ -46,8 +46,7 @@
                   "name": {
                     "title": "Service Name",
                     "type": "string",
-                    "required": true,
-                    "description": "Room Name"
+                    "required": true
                   },
                   "serviceType": {
                     "type": "object",
@@ -74,18 +73,21 @@
                       "characteristics": {
                         "type": "array",
                         "items": {
-                          "characteristicName": {
-                            "title": "Characteristics",
-                            "type": "string",
-                            "enum": [
-                              "On", "Current Door State", "Target Door State", "Obstruction Detection"
-                            ]
-                          },
-                          "endpoints": {
-                            "type": "array",
-                            "items": {
-                              "title": "Endpoints",
-                              "type": "string"
+                          "type": "object",
+                          "properties": {
+                            "characteristicName": {
+                              "title": "Characteristics",
+                              "type": "string",
+                              "enum": [
+                                "On", "Current Door State", "Target Door State", "Obstruction Detection"
+                              ]
+                            },
+                            "endpoints": {
+                              "type": "array",
+                              "items": {
+                                "title": "Endpoints",
+                                "type": "string"
+                              }
                             }
                           }
                         }
