@@ -16,11 +16,8 @@ export class GarageDoorOpener extends AbstractHsdService {
 
     const service = this.getService(this.api.hap.Service.GarageDoorOpener);
 
-    /// @todo add correct characteristics
     addCurrentDoorStateCharacteristic(api, service, hsd, this.config.endpoints[0]);
     addTargetDoorStateCharacteristic(api, service, hsd, this.config.endpoints[1], this.config.endpoints[2]);
     addObstructionDetectedCharacteristic(api, service, hsd, this.config.endpoints[3]);
   }
 }
-
-/// @todo add garage door operner to config.schema.json

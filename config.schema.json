@@ -40,6 +40,7 @@
             },
             "services": {
               "type": "array",
+              "title": "Services Array",
               "items": {
                 "type": "object",
                 "properties": {
@@ -55,6 +56,7 @@
                         "type": "string",
                         "title": "Service Type",
                         "required": true,
+                        "default": "Lightbulb",
                         "oneOf": [
                           {
                             "title": "Lightbulb", "enum": ["Lightbulb"]

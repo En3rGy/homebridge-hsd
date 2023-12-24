@@ -1,6 +1,8 @@
 import { PlatformConfig } from 'homebridge';
 import type { Service } from 'homebridge';
 
+/// @todo adopt to new config.schema.json layout!
+
 type HsdServiceConfig = {
     serviceType: Exclude<keyof typeof Service, 'prototype'>;
     endpoints: string[];

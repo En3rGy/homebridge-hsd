@@ -139,9 +139,9 @@ export class HomeServerConnector {
           this.requestPromiseRejecter.delete(endpoint);
         }
 
-        if (method in this._msgQueu) {
+        if (method in this._msgQueu) {  // @todo Check if required.
           if (endpoint in this._msgQueu[method]) {
-            this.logger.debug('Found recived method and endpoint in msgQue'); // @todo do something
+            this.logger.debug('Found recived method and endpoint in msgQue');
             this._msgQueu[method][endpoint] = value;
           }
         }
