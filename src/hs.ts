@@ -85,7 +85,7 @@ export class HomeServerConnector {
     const type = jsonMsg.type;
 
     if (code !== 0) {
-      this.logger.info('hs.ts | HomeserverConnector | Received message', message);
+      this.logger.info('hs.ts | HomeserverConnector | Received message', JSON.stringify(jsonMsg));
       return false;
     }
 
@@ -109,7 +109,6 @@ export class HomeServerConnector {
       }
 
     } else if (type === 'push') {
-      this.logger.info('hs.ts | HomeserverConnector | Received push message', JSON.stringify(jsonMsg));
       endpoint = jsonMsg.subscription.key;
       value = jsonMsg.data.value;
       this.logger.info('hs.ts | HomeserverConnector | Received push message with %s: %s', endpoint, value);

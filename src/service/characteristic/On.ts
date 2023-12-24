@@ -11,7 +11,7 @@ export const addOnCharacteristic = (api: API,
 
   // Add subscription
   hsd.addListener(reading => {
-    on.updateValue(Boolean(reading.value));
+    on.updateValue(Number(reading));
   }, getEndpoint);
 
   on.onGet(async () => {
