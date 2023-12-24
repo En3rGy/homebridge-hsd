@@ -109,8 +109,9 @@ export class HomeServerConnector {
       }
 
     } else if (type === 'push') {
-      endpoint = jsonMsg['subscription'].key;
-      value = jsonMsg['data'].value;
+      this.logger.info('hs.ts | HomeserverConnector | Received push message', JSON.stringify(jsonMsg));
+      endpoint = jsonMsg.subscription.key;
+      value = jsonMsg.data.value;
       this.logger.info('hs.ts | HomeserverConnector | Received push message with %s: %s', endpoint, value);
 
       /// return value via callback
