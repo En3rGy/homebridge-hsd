@@ -7,6 +7,7 @@ import { PLATFORM_NAME, PLUGIN_NAME } from './settings';
 import { HsdAccessoryConfig } from './config';
 
 import { Lightbulb } from './service/Lightbulb';
+import { GarageDoorOpener } from './service/GarageDoorOpener';
 
 /**
  * Platform Accessory
@@ -51,10 +52,14 @@ class HsdAccessory {
 
   public setupServices (accessory: HsdPlatformAccessory): void {
     for (const service of accessory.context.services) {
-      switch (service.id) {
+      switch (service.serviceType) {
 
         case 'Lightbulb':
           this.services.push(new Lightbulb(this.api, this.hsd, accessory, service));
+          break;
+
+        case 'GarageDoorOpener':
+          this.services.push(new GarageDoorOpener(this.api, this.hsd, accessory, service));
           break;
 
         default:

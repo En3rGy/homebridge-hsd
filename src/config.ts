@@ -2,7 +2,7 @@ import { PlatformConfig } from 'homebridge';
 import type { Service } from 'homebridge';
 
 type HsdServiceConfig = {
-    id: Exclude<keyof typeof Service, 'prototype'>;
+    serviceType: Exclude<keyof typeof Service, 'prototype'>;
     endpoints: string[];
     options: string[];
     name: string;
