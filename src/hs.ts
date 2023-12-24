@@ -104,8 +104,25 @@ export class HomeServerConnector {
         if (callback) {
           callback(value);
         }
+        else {
+          this.logger.warn("hs.ts | HomeserverConnector | No callback for %s registered", endpoint)
+        }
       }
 
+    } else if (type === 'push') {
+      this.logger.info('hs.ts | HomeserverConnector | Received push message', message);
+      endpoint = jsonMsg['subscription'].key;
+      value = jsonMsg['data'].value;
+
+      /// return value via callback
+      const callback = this._listeners.get(endpoint);
+      if (callback) {
+        callback(value);
+      }
+      else {
+        this.logger.warn("hs.ts | HomeserverConnector | No callback for %s registered", endpoint)
+      }
+    }      
     } else if( type === 'call') {
       const method = jsonMsg['request'].method;
       endpoint = jsonMsg['request'].key;
