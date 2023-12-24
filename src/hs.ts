@@ -96,12 +96,14 @@ export class HomeServerConnector {
     if (type === 'select' || type === 'subscribe') {
       this.logger.info('hs.ts | HomeserverConnector | Received select/subscribe message', message);
       for (const item of jsonMsg.data.items) {
-        item;
-        /// @todo iterate over results
-        // const callback = this._listeners.get(endpoint);
-        // if (callback) {
-      // get value and return via callback
-        // }
+        endpoint = item.key;
+        value = item.data.value;
+
+        /// return value via callback
+        const callback = this._listeners.get(endpoint);
+        if (callback) {
+          callback(value);
+        }
       }
 
     } else if( type === 'call') {
@@ -196,33 +198,35 @@ export class HomeServerConnector {
         this.logger.error('Max retries reached. Connction to HS failed.');
       }
     } else {
+
+      const params: object = msg['param'];
+      const method = params['method'];
+
+      if (method in this._msgQueu) {
+        //
+      } else {
+        this._msgQueu[method] = {};
+      }
+
       if (msg['type'] === 'call') {
-        const params: object = msg['param'];
-        const method = params['method'];
         const key: string = params['key'];
 
-        if (method in this._msgQueu) {
-          //
-        } else {
-          this._msgQueu[method] = {};
+        if (key in this._msgQueu[method]) {
+          return this._msgQueu[method][key];
         }
 
-        const smsg = JSON.stringify(msg);
-        this.logger.info('hs.ts | Send message: ' + smsg);
-        this._waitForMsg = true;
-        this._ws.send(smsg);
+      } else if (msg['type'] === 'subscribe') {
+        //
 
-        if (msg['type'] === 'call') {
-          //while (this._waitForMsg) {
-          // @todo do something here ###
-          //}
-          if (key in this._msgQueu[method]) {
-            return this._msgQueu[method][key];
-          }
-        }
       } else {
         this.logger.warn('hs.ts | HomeServerConnector | Message type %s not implemented yet.', msg['type']);
+        return '';
       }
+
+      const smsg = JSON.stringify(msg);
+      this.logger.info('hs.ts | Send message: ' + smsg);
+      this._waitForMsg = true;
+      this._ws.send(smsg);
 
     }
     return '';
