@@ -94,7 +94,7 @@ export class HomeServerConnector {
     let value: string|number;
 
     if (type === 'select' || type === 'subscribe') {
-      this.logger.info('hs.ts | HomeserverConnector | Received select/subscribe message', message);
+      this.logger.info('hs.ts | HomeserverConnector | Received select/subscribe message');
       for (const item of jsonMsg.data.items) {
         endpoint = item.key;
         value = item.data.value;
@@ -109,7 +109,7 @@ export class HomeServerConnector {
       }
 
     } else if (type === 'push') {
-      this.logger.info('hs.ts | HomeserverConnector | Received push message', message);
+      this.logger.info('hs.ts | HomeserverConnector | Received push message');
       endpoint = jsonMsg['subscription'].key;
       value = jsonMsg['data'].value;
 
@@ -252,8 +252,9 @@ export class HomeServerConnector {
    * @param listener
    * @param endpoint
    */
-  addListener(listener: object, endpoint: string) {
-    this._listeners[endpoint] = listener;
+  addListener(listener: (reading: any) => void, endpoint: string) {
+    this.logger.info('hs.ts | HomeServerConnector | Adding listener for', endpoint);
+    this._listeners.set(endpoint, listener);
     this.subscribe([endpoint]);
   }
 
