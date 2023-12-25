@@ -13,10 +13,22 @@
 
 | Homebridge Entry | Note                  |
 | ---------------- | --------------------- |
+| Platform         | Requiered by Homebridge |
 | Accessory        | This platform hsd-knx |
 | Service Type     | e.g. light bulb       |
 | Characteristic   | e.g. on               |
 | Endpoints        | HS URL Endpoint ID    |
+
+* Platform: Eine "Platform" in Homebridge repräsentiert ein Plugin, das mehrere Geräte (Accessories) steuern kann. Diese Plattform-Plugins sind in der Lage, automatisch neue Geräte zu entdecken und in HomeKit hinzuzufügen, oft für spezifische Marken oder Ökosysteme. Zum Beispiel könnte ein Philips Hue Bridge-Plugin als eine "Platform" betrachtet werden, weil es die Verwaltung mehrerer Hue-Lampe (Accessories) ermöglicht.
+* Accessory: Ein "Accessory" in Homebridge ist ein einzelnes Gerät. Dies kann eine Lampe, ein Schalter, ein Sensor oder jedes andere Gerät sein, das mit HomeKit gesteuert werden kann. Ein Accessory wird typischerweise durch ein Plugin ermöglicht, das die Kommunikation und Steuerung des Geräts übernimmt.
+* Service: Ein "Service" in Homebridge definiert die spezifischen Funktionen oder Fähigkeiten eines Accessories. Zum Beispiel könnte ein Licht-Accessory Dienste für das Ein-/Ausschalten, die Helligkeit und die Farbtemperatur haben. Jeder Service entspricht einer Gruppe von Funktionalitäten, die HomeKit versteht und steuern kann.
+* Characteristic: Eine "Characteristic" ist eine spezifische Eigenschaft innerhalb eines Services. Es handelt sich dabei um die einzelnen Attribute oder Einstellungen, die ein Service steuern kann. Zum Beispiel könnte ein Licht-Service die Characteristics "On/Off-Status", "Helligkeit" und "Farbtemperatur" haben. Characteristics sind die tatsächlichen Datenpunkte, die von HomeKit gelesen oder geschrieben werden.
+
+## Strategy
+
+From KNX:
+* KNX Group Addresses resp. URL Endpoints represent unique functions, a combination of Endpoints realises _characteristics_
+* Accessories are physical devices realising multipe characteristics.
 
 
 # Homebridge Platform Plugin Template
