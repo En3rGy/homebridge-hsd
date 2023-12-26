@@ -1,53 +1,43 @@
-<p align="center">
+# Introduction
 
-<img src="https://github.com/homebridge/branding/raw/master/logos/homebridge-wordmark-logo-vertical.png" width="150">
-
-</p>
-
-<span align="center">
+Homebridge-hsd is a plugin for [Homebridge.io](https://homebridge.io/). It accesses KNX via the [Gira HomeSever URL endpoints](https://partner.gira.com/en/service/software-tools/developer.html).
 
 # Helpful Links
-* Homeserver URL Endpoint Documentation: \HS ICD\URL Endpoint\documentation\de
+* [Gira HomeServer URL Endpoint Documentation](https://partner.gira.com/en/service/software-tools/developer.html): \HS ICD\URL Endpoint\documentation\de
 * [Homebridge KNX Plugin](https://github.com/kodmax/homebridge-knx-eib) as template
 * [Homebridge Service Types](https://developers.homebridge.io/#/service)
 
-| Homebridge Entry | Note                  |
-| ---------------- | --------------------- |
+| Term             | Definition                    |
+| ---------------- | ----------------------- |
 | Platform         | Requiered by Homebridge |
-| Accessory        | This platform hsd-knx |
-| Service Type     | e.g. light bulb       |
-| Characteristic   | e.g. on               |
-| Endpoints        | HS URL Endpoint ID    |
+| Accessory        | This platform hsd-knx   |
+| Service Type     | e.g. light bulb         |
+| Characteristic   | e.g. on                 |
+| Endpoints        | HS URL Endpoint ID      |
 
-* Platform: Eine "Platform" in Homebridge repräsentiert ein Plugin, das mehrere Geräte (Accessories) steuern kann. Diese Plattform-Plugins sind in der Lage, automatisch neue Geräte zu entdecken und in HomeKit hinzuzufügen, oft für spezifische Marken oder Ökosysteme. Zum Beispiel könnte ein Philips Hue Bridge-Plugin als eine "Platform" betrachtet werden, weil es die Verwaltung mehrerer Hue-Lampe (Accessories) ermöglicht.
-* Accessory: Ein "Accessory" in Homebridge ist ein einzelnes Gerät. Dies kann eine Lampe, ein Schalter, ein Sensor oder jedes andere Gerät sein, das mit HomeKit gesteuert werden kann. Ein Accessory wird typischerweise durch ein Plugin ermöglicht, das die Kommunikation und Steuerung des Geräts übernimmt.
-* Service: Ein "Service" in Homebridge definiert die spezifischen Funktionen oder Fähigkeiten eines Accessories. Zum Beispiel könnte ein Licht-Accessory Dienste für das Ein-/Ausschalten, die Helligkeit und die Farbtemperatur haben. Jeder Service entspricht einer Gruppe von Funktionalitäten, die HomeKit versteht und steuern kann.
-* Characteristic: Eine "Characteristic" ist eine spezifische Eigenschaft innerhalb eines Services. Es handelt sich dabei um die einzelnen Attribute oder Einstellungen, die ein Service steuern kann. Zum Beispiel könnte ein Licht-Service die Characteristics "On/Off-Status", "Helligkeit" und "Farbtemperatur" haben. Characteristics sind die tatsächlichen Datenpunkte, die von HomeKit gelesen oder geschrieben werden.
+* Platform: Requiered by Homebridge. A "platform" in Homebridge represents a plugin that can control multiple devices (accessories). These platform plugins are able to automatically discover and add new devices to HomeKit, often for specific brands or ecosystems. For example, a Philips Hue Bridge plugin could be considered a "platform" because it allows the management of multiple Hue bulbs (accessories).
+* Accessory: Requiered by Homebridge. An "Accessory" in Homebridge is a single device. This can be a lamp, a switch, a sensor or any other device that can be controlled with HomeKit. An accessory is typically enabled by a plugin that takes over the communication and control of the device.
+* Service: Requiered by Homebridge. A "service" in Homebridge defines the specific functions or capabilities of an accessory. For example, a light accessory could have services for switching on/off, brightness and color temperature. Each service corresponds to a group of functionalities that HomeKit understands and can control.
+* Characteristic: Requiered by Homebridge. A "characteristic" is a specific property within a service. These are the individual attributes or settings that a service can control. For example, a light service could have the characteristics "On/Off status", "Brightness" and "Color temperature". Characteristics are the actual data points that are read or written by HomeKit.
+* Endpoints: Gira HomeServer URL Endpoints. The interface of the Gira HomeServer to KNX, mirroring KNX Group Addresses.
 
-## Strategy
 
-From KNX:
+# Strategy
+
+From KNX point of view:
 * KNX Group Addresses resp. URL Endpoints represent unique functions, a combination of Endpoints realises _characteristics_
-* Accessories are physical devices realising multipe characteristics.
+* Accessories are entry gates to different device categories, realising multiple services. Each Homebridge is limited by max. 150 Accessories. A good approach is to combine single functions in rooms or trades as Accessories.
+* Services are usually devices providing multiple functions (e.g. on/off, dimm).
+* Characteristics are the smallest unit und realsied by one or few group addresses (e.g. on/off with get GA and set GA)
 
 
-# Homebridge Platform Plugin Template
+# Background
 
-</span>
+## Homebridge Platform Plugin Template
 
-This is a template Homebridge dynamic platform plugin and can be used as a base to help you get started developing your own plugin.
+This plugin is based on a template Homebridge dynamic platform plugin.
 
-This template should be used in conjunction with the [developer documentation](https://developers.homebridge.io/). A full list of all supported service types, and their characteristics is available on this site.
-
-### Clone As Template
-
-Click the link below to create a new GitHub Repository using this template, or click the *Use This Template* button above.
-
-<span align="center">
-
-### [Create New Repository From Template](https://github.com/homebridge/homebridge-plugin-template/generate)
-
-</span>
+The template should be used in conjunction with the [developer documentation](https://developers.homebridge.io/). A full list of all supported service types, and their characteristics is available on this site.
 
 ### Setup Development Environment
 
