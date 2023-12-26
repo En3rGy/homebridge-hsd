@@ -1,4 +1,4 @@
-name: Build and Lint
+name: Homebridge Plugin Build and Deployment
 
 on: [push, pull_request]
 
@@ -11,7 +11,7 @@ jobs:
       matrix:
         # the Node.js versions to build on
         node-version: [18.x, 20.x]
-
+  
     steps:
       - uses: actions/checkout@v3
 
@@ -23,11 +23,17 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Build project
+        run: npm run build
+
       - name: Lint the project
         run: npm run lint
 
       - name: Build the project
         run: npm run build
+
+      - name: Install Homebridge Plugin
+        run: npm install ~/homebridge-hsd
 
       - name: List, audit, fix outdated dependencies and build again
         run: |
