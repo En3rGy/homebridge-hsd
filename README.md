@@ -2,24 +2,20 @@
 
 Homebridge-hsd is a plugin for [Homebridge.io](https://homebridge.io/). It accesses KNX via the [Gira HomeSever URL endpoints](https://partner.gira.com/en/service/software-tools/developer.html).
 
-# Helpful Links
+## Helpful Links
 * [Gira HomeServer URL Endpoint Documentation](https://partner.gira.com/en/service/software-tools/developer.html): \HS ICD\URL Endpoint\documentation\de
 * [Homebridge KNX Plugin](https://github.com/kodmax/homebridge-knx-eib) as template
 * [Homebridge Service Types](https://developers.homebridge.io/#/service)
 
-| Term             | Definition                    |
-| ---------------- | ----------------------- |
-| Platform         | Requiered by Homebridge |
-| Accessory        | This platform hsd-knx   |
-| Service Type     | e.g. light bulb         |
-| Characteristic   | e.g. on                 |
-| Endpoints        | HS URL Endpoint ID      |
+## Glossary
 
-* Platform: Requiered by Homebridge. A "platform" in Homebridge represents a plugin that can control multiple devices (accessories). These platform plugins are able to automatically discover and add new devices to HomeKit, often for specific brands or ecosystems. For example, a Philips Hue Bridge plugin could be considered a "platform" because it allows the management of multiple Hue bulbs (accessories).
-* Accessory: Requiered by Homebridge. An "Accessory" in Homebridge is a single device. This can be a lamp, a switch, a sensor or any other device that can be controlled with HomeKit. An accessory is typically enabled by a plugin that takes over the communication and control of the device.
-* Service: Requiered by Homebridge. A "service" in Homebridge defines the specific functions or capabilities of an accessory. For example, a light accessory could have services for switching on/off, brightness and color temperature. Each service corresponds to a group of functionalities that HomeKit understands and can control.
-* Characteristic: Requiered by Homebridge. A "characteristic" is a specific property within a service. These are the individual attributes or settings that a service can control. For example, a light service could have the characteristics "On/Off status", "Brightness" and "Color temperature". Characteristics are the actual data points that are read or written by HomeKit.
-* Endpoints: Gira HomeServer URL Endpoints. The interface of the Gira HomeServer to KNX, mirroring KNX Group Addresses.
+| Term             | Definition              |
+| ---------------- | ----------------------- |
+| Platform | Requiered by Homebridge. A "platform" in Homebridge represents a plugin that can control multiple devices (accessories). These platform plugins are able to automatically discover and add new devices to HomeKit, often for specific brands or ecosystems. For example, a Philips Hue Bridge plugin could be considered a "platform" because it allows the management of multiple Hue bulbs (accessories). |
+| Accessory | Requiered by Homebridge. An "Accessory" in Homebridge is a single device. This can be a lamp, a switch, a sensor or any other device that can be controlled with HomeKit. An accessory is typically enabled by a plugin that takes over the communication and control of the device. |
+| Service | Requiered by Homebridge. A "service" in Homebridge defines the specific functions or capabilities of an accessory. For example, a light accessory could have services for switching on/off, brightness and color temperature. Each service corresponds to a group of functionalities that HomeKit understands and can control. |
+| Characteristic | Requiered by Homebridge. A "characteristic" is a specific property within a service. These are the individual attributes or settings that a service can control. For example, a light service could have the characteristics "On/Off status", "Brightness" and "Color temperature". Characteristics are the actual data points that are read or written by HomeKit. |
+| Endpoints | Gira HomeServer URL Endpoints. The interface of the Gira HomeServer to KNX, mirroring KNX Group Addresses. |
 
 
 # Strategy
