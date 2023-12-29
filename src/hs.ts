@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
-import { API, Characteristic } from 'homebridge';
+// import { API, Characteristic } from 'homebridge';
+import { API } from 'homebridge';
 import * as WebSocket from 'ws';
 import { Logging } from 'homebridge';
 import { HsdAccessory } from './hsdAccessory';

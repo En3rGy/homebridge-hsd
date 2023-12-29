@@ -147,6 +147,8 @@
               "type": "array",
               "items": [              
                 {
+                  "title": "Characteristic",
+                  "type": "select",
                   "key": "accessories[].services[].serviceTypeName"
                 },
                 {
@@ -159,6 +161,9 @@
                     {
                       "key": "accessories[].services[].characteristics[].endpoints",
                       "type": "array",
+                      "expandable": true,
+                      "expanded": false,                      
+                      "helpvalue": "Endpoints given as given by the <a href=https://developers.homebridge.io/#/service>API</a>.",
                       "items": [
                         {
                           "key": "accessories[].services[].characteristics[].endpoints[].endpointId"
