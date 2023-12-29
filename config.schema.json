@@ -79,7 +79,7 @@
                           "properties": {
                             "characteristicName": {
                               "title": "Characteristics",
-                              "type": "string",
+                              "type": "select",
                               "enum": [
                                 "On", "Current Door State", "Target Door State", "Obstruction Detection"
                               ]
@@ -126,7 +126,9 @@
     },
     {
       "key": "accessories",
-      "type": "array",
+      "type": "set",
+      "expandable": true,
+      "expanded": false,      
       "items": [
         {
           "key": "accessories[].name"
@@ -134,6 +136,8 @@
         {
           "key": "accessories[].services",
           "type": "array",
+          "expandable": true,
+          "expanded": false,          
           "items": [
             {
               "key": "accessories[].services[].name"
