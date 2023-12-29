@@ -20,7 +20,7 @@ export class HsdPlatform implements DynamicPlatformPlugin {
 
     this.api.on(APIEvent.SHUTDOWN, async () => {
       await link.disconnect();
-      this.logger.debug(`hsdPlatform.ts | HsdPlatform | hsd IP gateway ${this.config.hsdIpGatewayIp} connection closed.`);
+      this.logger.debug(`hsdPlatform.ts | HsdPlatform | hsd IP gateway ${this.config.hsdIp} connection closed.`);
     });
 
     return link;

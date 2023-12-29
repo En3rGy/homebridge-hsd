@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { API } from 'homebridge';
+import { API, Characteristic } from 'homebridge';
 import * as WebSocket from 'ws';
 import { Logging } from 'homebridge';
 import { HsdAccessory } from './hsdAccessory';
@@ -18,11 +18,13 @@ export class HomeServerConnector {
   private _ws: WebSocket.WebSocket | null = null;
   private _connState = CONNECTION_STATE.INIT;
   private _transactionIdCnt = 0;
-  private _listeners: Map<string, (reading: any) => void> = new Map();
+  private _listeners: Map<string, (reading: string) => void> = new Map();
   private _msgQueu = {};
   private _waitForMsg = true;
 
-  private requestPromiseResolver: Map<string, (value: string) => void> = new Map();
+  private requestPromiseResolver: Map<string, (value: string | PromiseLike<string>) => void> = new Map();
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private requestPromiseRejecter: Map<string, (reason?: any) => void> = new Map();
   private lastSet: Map<string, string> = new Map();
 
@@ -91,13 +93,13 @@ export class HomeServerConnector {
 
     // let data: string;
     let endpoint: string;
-    let value: string|number;
+    let value: string;
 
     if (type === 'select' || type === 'subscribe') {
       this.logger.info('hs.ts | HomeserverConnector | Received select/subscribe message');
       for (const item of jsonMsg.data.items) {
         endpoint = item.key;
-        value = item.data.value;
+        value = String(item.data.value);
 
         /// return value via callback
         const callback = this._listeners.get(endpoint);
@@ -162,7 +164,7 @@ export class HomeServerConnector {
         }
       } else {
         this.logger.warn('hs.ts | HomeserverConnector | Received unknown method: ', method);
-        value = 0;
+        value = '';
       }
 
       /*if ( endpoint in this._listeners) {
@@ -252,7 +254,8 @@ export class HomeServerConnector {
    * @param listener
    * @param endpoint
    */
-  addListener(listener: (reading: any) => void, endpoint: string) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  addListener(listener: (reading: string | number) => void, endpoint: string) {
     this.logger.info('hs.ts | HomeServerConnector | Adding listener for', endpoint);
     this._listeners.set(endpoint, listener);
     this.subscribe([endpoint]);

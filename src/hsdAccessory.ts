@@ -42,7 +42,6 @@ class HsdAccessory {
   public register (): HsdPlatformAccessory {
     const displayName = this.getAccessoryDisplayName(this.config);
     this.logger.info('Registering hsd accessory', displayName);
-    // eslint-disable-next-line new-cap
     const accessory = new this.api.platformAccessory(displayName, this.uuid) as HsdPlatformAccessory;
     accessory.context = this.config;
 
