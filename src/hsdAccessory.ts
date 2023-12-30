@@ -1,4 +1,4 @@
-import { API, Logging } from 'homebridge';
+import { API, Characteristic, Logging } from 'homebridge';
 import { HomeServerConnector } from './hs';
 
 import { AbstractHsdService } from './service/AbstractHsdService';
@@ -21,12 +21,19 @@ class HsdAccessory {
   private services: AbstractHsdService[] = [];
 
   private getAccessoryUUID (config: HsdAccessoryConfig): string {
-    const addresses = config.services.map(service => service.endpoints.join(',')).join(',');
-    return this.api.hap.uuid.generate(`${PLATFORM_NAME}.${this.config.name}.${addresses}`);
+
+    let addresses = '';
+    for (const service of config.services) {
+      addresses = addresses + service.characteristics.map(endpoints => endpoints.endpoints.join(',')).join(',');
+    }
+
+    // const addresses = config.services.map(service => service.characteristics.join(',')).join(',');
+
+    return this.api.hap.uuid.generate(`${PLATFORM_NAME}.${this.config.accessoryName}.${addresses}`);
   }
 
   private getAccessoryDisplayName (config: HsdAccessoryConfig): string {
-    return `${config.name} ${config.services[0].name}`;
+    return `${config.accessoryName} ${config.services.map(services => services.serviceName).join(' ')}`;
   }
 
   public constructor (

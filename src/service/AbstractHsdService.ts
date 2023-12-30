@@ -8,7 +8,8 @@ export abstract class AbstractHsdService {
 
   protected getService (service: WithUUID<typeof Service>): Service {
     return this.accessory.getService(service) ??
-            this.accessory.addService(service, `${this.accessory.context.name} ${this.config.name}`, this.config.name);
+            this.accessory.addService(service, `${this.accessory.context.accessoryName} ${this.config.serviceName}`,
+              this.config.serviceName);
   }
 
   public constructor (

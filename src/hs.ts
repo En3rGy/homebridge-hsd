@@ -21,7 +21,6 @@ export class HomeServerConnector {
   private _transactionIdCnt = 0;
   private _listeners: Map<string, (reading: string) => void> = new Map();
   private _msgQueu = {};
-  private _waitForMsg = true;
 
   private requestPromiseResolver: Map<string, (value: string | PromiseLike<string>) => void> = new Map();
 
@@ -149,8 +148,6 @@ export class HomeServerConnector {
           }
         }
 
-        this._waitForMsg = false;
-
       // ### reply on previous set call ###
       } else if (method === 'set') {
         // returns the get value if getCo was called before
@@ -243,7 +240,6 @@ export class HomeServerConnector {
 
       const smsg = JSON.stringify(msg);
       this.logger.info('hs.ts | Send message: ' + smsg);
-      this._waitForMsg = true;
       this._ws.send(smsg);
 
     }

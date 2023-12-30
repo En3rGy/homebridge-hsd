@@ -13,7 +13,12 @@ export class Lightbulb extends AbstractHsdService {
     super(api, hsd, accessory, config);
 
     const service = this.getService(this.api.hap.Service.Lightbulb);
-    addOnCharacteristic(api, service, hsd, this.config.endpoints[0], this.config.endpoints[1]);
+
+    for (const characteristic of config.characteristics) {
+      if (characteristic.characteristicName === 'On') {
+        addOnCharacteristic(api, service, hsd, characteristic.endpoints[0], characteristic.endpoints[1]);
+      }
+    }
   }
 }
 

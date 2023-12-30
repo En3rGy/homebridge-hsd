@@ -52,51 +52,47 @@
                     "type": "string",
                     "required": true
                   },
-                  "serviceTypes": {
+                  "serviceType": {
+                    "type": "string",
+                    "title": "Service Type",
+                    "required": true,
+                    "default": "Lightbulb",
+                    "oneOf": [
+                      { "title": "Lightbulb", "enum": ["Lightbulb"] },
+                      { "title": "Outlet", "enum": ["Outlet"] },
+                      { "title": "Switch", "enum": ["Switch"] },
+                      { "title": "Garage Door Opener", "enum": ["GarageDoorOpener"] },
+                      { "title": "Window", "enum": ["Window"] }
+                    ]
+                  },                  
+                  "characteristics": {
                     "type": "array",
+                    "expandable": true,
+                    "expanded": false,                  
                     "items": {
                       "type": "object",
                       "properties": {
-                        "serviceType": {
+                        "characteristicName": {
+                          "title": "Characteristics",
                           "type": "string",
-                          "title": "Service Type",
-                          "required": true,
-                          "default": "Lightbulb",
+                          "default": "On",
+                          "description": "<h4>Endpoints</h4><p><ul><li>On: 1=set, 2=get</li></ul></p>",
                           "oneOf": [
-                            { "title": "Lightbulb", "enum": ["Lightbulb"] },
-                            { "title": "Outlet", "enum": ["Outlet"] },
-                            { "title": "Switch", "enum": ["Switch"] },
-                            { "title": "Garage Door Opener", "enum": ["GarageDoorOpener"] }
+                            { "title": "On", "enum": ["On"]},
+                            { "title": "Current Door State", "enum": ["CurrentDoorState"]},
+                            { "title": "Target Door State", "enum": ["TargetDoorState"]},
+                            { "title": "Obstruction Detection", "enum": ["ObstructionDetection"]},
+                            { "title": "Position State", "enum": ["PositionState"]},
+                            { "title": "Target Position", "enum": ["TargetPosition"]}
                           ]
-                        },                  
-                        "characteristics": {
+                        },
+                        "endpoints": {
                           "type": "array",
                           "expandable": true,
-                          "expanded": false,                  
+                          "expanded": false,                        
                           "items": {
-                            "type": "object",
-                            "properties": {
-                              "characteristicName": {
-                                "title": "Characteristics",
-                                "type": "string",
-                                "default": "On",
-                                "oneOf": [
-                                  { "title": "On", "enum": ["On"]},
-                                  { "title": "Current Door State", "enum": ["Current Door State"]},
-                                  { "title": "Target Door State", "enum": ["Target Door State"]},
-                                  { "title": "Obstruction Detection", "enum": ["Obstruction Detection"]}
-                                ]
-                              },
-                              "endpoints": {
-                                "type": "array",
-                                "expandable": true,
-                                "expanded": false,                        
-                                "items": {
-                                  "title": "Endpoints",
-                                  "type": "string"
-                                }
-                              }
-                            }
+                            "title": "Endpoints",
+                            "type": "string"
                           }
                         }
                       }

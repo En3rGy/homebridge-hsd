@@ -3,25 +3,49 @@ import type { Service } from 'homebridge';
 
 /// @todo adopt to new config.schema.json layout!
 
-type HsdServiceConfig = {
-    serviceType: Exclude<keyof typeof Service, 'prototype'>;
+type HsdCharacteristicsConfig = {
+    characteristicName: string;
     endpoints: string[];
-    options: string[];
-    name: string;
+};
+
+type HsdServiceConfig = {
+    serviceName: string;
+    serviceType: Exclude<keyof typeof Service, 'prototype'>;
+    characteristics: HsdCharacteristicsConfig[];
 };
 
 type HsdAccessoryConfig = {
+    accessoryName: string;
     services: HsdServiceConfig[];
-    name: string;
 };
 
 interface HsdPlatformConfig extends PlatformConfig {
+    hsIp: string;
+    hsUserName: string;
+    hsUserPw: string;
+    hsPort: number;
     accessories: HsdAccessoryConfig[];
-
-    maxConcurrentMessages: number;
-    maxTelegramsPerSecond: number;
-    hsdIpGatewayIp: string;
-    readTimeout: number;
 }
 
-export type { HsdPlatformConfig, HsdAccessoryConfig, HsdServiceConfig };
+export type { HsdPlatformConfig, HsdAccessoryConfig, HsdServiceConfig, HsdCharacteristicsConfig };
+
+/*
+"hsIp"
+"hsUserName"
+"hsUserPw"
+"hsPort"
+"accessories"
+    [
+        "accessoryName"
+        "services"
+            [
+                "serviceName"
+                "serviceType" e.g. "Lightbulb",
+                "characteristics"
+                    [
+                        "characteristicName" e.g. "default": "On"
+                        "endpoints" []
+                    ]
+            ]
+    ]
+*/
