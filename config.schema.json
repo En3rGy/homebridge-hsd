@@ -1,93 +1,97 @@
 {
   "pluginAlias": "hsd",
   "pluginType": "platform",
+  "footerDisplay": "v0.5",
   "singular": false,
   "schema": {
+    "required": ["hsIp", "hsUserName", "hsUserPw", "hsPort", "accessories"],
     "type": "object",
     "properties": {
       "hsIp": {
         "title": "Homeserver IP",
         "type": "string",
-        "required": true,
-        "format": "ipv4"
+        "format": "ipv4",
+        "description": "e.g. 192.168.x.x"
       },
       "hsUserName": {
-        "title": "HS user name",
-        "type": "string",
-        "required": true
+        "title": "HS User Name",
+        "type": "string"
       },
       "hsUserPw": {
         "title": "HS user password",
-        "type": "string",
-        "required": true
+        "type": "string"
       },
       "hsPort": {
         "title": "HS Port",
         "type": "number",
-        "required": true,
-        "default": "443"
+        "default": 443
       },
       "accessories": {
         "type": "array",
+        "title": "Accessories",
+        "expandable": true,
+        "expanded": false,
         "items": {
           "type": "object",
+          "required": ["accessoryName"],
           "properties": {
-            "name": {
+            "accessoryName": {
               "title": "Accessory Name",
               "type": "string",
-              "required": true,
-              "description": "E.g. Room"
+              "description": "E.g. room"
             },
             "services": {
               "type": "array",
-              "title": "Services Array",
+              "expandable": true,
+              "expanded": false,      
               "items": {
                 "type": "object",
                 "properties": {
-                  "name": {
+                  "serviceName": {
                     "title": "Service Name",
                     "type": "string",
                     "required": true
                   },
-                  "serviceType": {
-                    "type": "object",
-                    "properties": {
-                      "serviceTypeName": {
-                        "type": "string",
-                        "title": "Service Type",
-                        "required": true,
-                        "default": "Lightbulb",
-                        "oneOf": [
-                          {
-                            "title": "Lightbulb", "enum": ["Lightbulb"]
-                          },
-                          {
-                            "title": "Outlet", "enum": ["Outlet"]
-                          },
-                          {
-                            "title": "Switch", "enum": ["Switch"]
-                          },
-                          {
-                            "title": "Garage Door Opener", "enum": ["GarageDoorOpemer"]
-                          }
-                        ]
-                      },
-                      "characteristics": {
-                        "type": "array",
-                        "items": {
-                          "type": "object",
-                          "properties": {
-                            "characteristicName": {
-                              "title": "Characteristics",
-                              "type": "select",
-                              "enum": [
-                                "On", "Current Door State", "Target Door State", "Obstruction Detection"
-                              ]
-                            },
-                            "endpoints": {
-                              "type": "array",
-                              "items": {
-                                "endpointId": {
+                  "serviceTypes": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "serviceType": {
+                          "type": "string",
+                          "title": "Service Type",
+                          "required": true,
+                          "default": "Lightbulb",
+                          "oneOf": [
+                            { "title": "Lightbulb", "enum": ["Lightbulb"] },
+                            { "title": "Outlet", "enum": ["Outlet"] },
+                            { "title": "Switch", "enum": ["Switch"] },
+                            { "title": "Garage Door Opener", "enum": ["GarageDoorOpener"] }
+                          ]
+                        },                  
+                        "characteristics": {
+                          "type": "array",
+                          "expandable": true,
+                          "expanded": false,                  
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "characteristicName": {
+                                "title": "Characteristics",
+                                "type": "string",
+                                "default": "On",
+                                "oneOf": [
+                                  { "title": "On", "enum": ["On"]},
+                                  { "title": "Current Door State", "enum": ["Current Door State"]},
+                                  { "title": "Target Door State", "enum": ["Target Door State"]},
+                                  { "title": "Obstruction Detection", "enum": ["Obstruction Detection"]}
+                                ]
+                              },
+                              "endpoints": {
+                                "type": "array",
+                                "expandable": true,
+                                "expanded": false,                        
+                                "items": {
                                   "title": "Endpoints",
                                   "type": "string"
                                 }
@@ -105,80 +109,5 @@
         }
       }
     }
-  },
-  "layout": [
-    {
-      "key": "hsIp",
-      "title": "HS IP",
-      "placeholder": "192.168.x.x"
-    },
-    {
-      "key": "hsUserName",
-      "title": "HS User Name"
-    },
-    {
-      "key": "hsUserPw",
-      "title": "HS User Password"
-    },
-    {
-      "key": "hsPort",
-      "title": "HS Port"
-    },
-    {
-      "key": "accessories",
-      "type": "set",
-      "expandable": true,
-      "expanded": false,      
-      "items": [
-        {
-          "key": "accessories[].name"
-        },
-        {
-          "key": "accessories[].services",
-          "type": "array",
-          "expandable": true,
-          "expanded": false,          
-          "items": [
-            {
-              "key": "accessories[].services[].name"
-            },
-            {
-              "key": "accessories[].services[].serviceType",
-              "type": "array",
-              "items": [              
-                {
-                  "title": "Characteristic",
-                  "type": "select",
-                  "key": "accessories[].services[].serviceTypeName"
-                },
-                {
-                  "key": "accessories[].services[].characteristics",
-                  "type": "array",
-                  "items": [
-                    {
-                      "key": "accessories[].services[].characteristics[].characteristicName"
-                    },
-                    {
-                      "key": "accessories[].services[].characteristics[].endpoints",
-                      "type": "array",
-                      "expandable": true,
-                      "expanded": false,                      
-                      "helpvalue": "Endpoints given as given by the <a href=https://developers.homebridge.io/#/service>API</a>.",
-                      "items": [
-                        {
-                          "key": "accessories[].services[].characteristics[].endpoints[].endpointId"
-                        }
-                      ]
-                    }
-                  ]                  
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ],
-  "form": null,
-  "display": null
+  }
 }
