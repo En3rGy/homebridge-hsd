@@ -2,7 +2,7 @@
   "private": true,
   "displayName": "Gira Homeserver Bridge",
   "name": "homebridge-hsd",
-  "version": "1.0.4",
+  "version": "1.0.7",
   "description": "Plugin to access KNX bus via Gira Homeserver",
   "license": "MIT",
   "repository": {

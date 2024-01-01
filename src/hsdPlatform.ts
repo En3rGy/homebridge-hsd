@@ -57,11 +57,11 @@ export class HsdPlatform implements DynamicPlatformPlugin {
       }
     }
 
-    for (const knxAccessory of this.hsdAccessories.values()) {
-      const accessory = this.cachedAccessories.get(knxAccessory.uuid) ?? knxAccessory.register();
+    for (const hsdAccessory of this.hsdAccessories.values()) {
+      const accessory = this.cachedAccessories.get(hsdAccessory.uuid) ?? hsdAccessory.register();
 
       try {
-        knxAccessory.setupServices(accessory);
+        hsdAccessory.setupServices(accessory);
 
       } catch (e) {
         this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);

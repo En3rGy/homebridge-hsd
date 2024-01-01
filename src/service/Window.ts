@@ -15,6 +15,7 @@ export class Window extends AbstractHsdService {
     super(api, hsd, accessory, config);
 
     const service = this.getService(this.api.hap.Service.Window);
+    //service.setCharacteristic(this.api.hap.Service.name, config.serviceName);
 
     for (const characteristic of config.characteristics) {
       if (characteristic.characteristicName === 'CurrentDoorState') {

@@ -1,7 +1,7 @@
 {
   "pluginAlias": "hsd",
   "pluginType": "platform",
-  "footerDisplay": "v0.5",
+  "footerDisplay": "v0.7",
   "singular": false,
   "schema": {
     "required": ["hsIp", "hsUserName", "hsUserPw", "hsPort", "accessories"],
@@ -76,7 +76,7 @@
                           "title": "Characteristics",
                           "type": "string",
                           "default": "On",
-                          "description": "<h4>Endpoints</h4><p><ul><li>On: 1=set, 2=get</li></ul></p>",
+                          "description": "<h4>Endpoints</h4><p><ul><li>On: 1=set, 2=get</li><li>CurrentDoorState: 1=get</li><li>TargetDoorState: 1=set, 2=get</li><li>ObstructionDetected: 1=get</li></ul></p>",
                           "oneOf": [
                             { "title": "On", "enum": ["On"]},
                             { "title": "Current Door State", "enum": ["CurrentDoorState"]},

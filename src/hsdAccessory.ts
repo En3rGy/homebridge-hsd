@@ -58,6 +58,8 @@ class HsdAccessory {
 
   public setupServices (accessory: HsdPlatformAccessory): void {
     for (const service of accessory.context.services) {
+      this.logger.info('Set up service', accessory.context.accessoryName, service.serviceName);
+
       switch (service.serviceType) {
 
         case 'Lightbulb':
@@ -71,7 +73,6 @@ class HsdAccessory {
         default:
           throw new Error(`<${service.serviceType}> service not supported`);
       }
-
     }
   }
 }

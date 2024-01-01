@@ -31,7 +31,7 @@ From KNX point of view:
 
 ## Homebridge Platform Plugin Template
 
-This plugin is based on a template Homebridge dynamic platform plugin.
+This plugin is based on a template [Homebridge dynamic platform plugin](https://github.com/homebridge/homebridge-plugin-template).
 
 The template should be used in conjunction with the [developer documentation](https://developers.homebridge.io/). A full list of all supported service types, and their characteristics is available on this site.
 

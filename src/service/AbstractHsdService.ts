@@ -6,10 +6,27 @@ import { HsdPlatformAccessory } from '../hsdPlatformAccessory';
 
 export abstract class AbstractHsdService {
 
+  public name = '';
+  public serviceId = '';
+  public uuid = '';
+
   protected getService (service: WithUUID<typeof Service>): Service {
-    return this.accessory.getService(service) ??
-            this.accessory.addService(service, `${this.accessory.context.accessoryName} ${this.config.serviceName}`,
-              this.config.serviceName);
+
+    let retService = this.accessory.getService(this.name);
+    if(!retService) {
+      retService = this.accessory.addService(service, this.name, this.serviceId);
+    }
+    this.uuid = retService.UUID;
+
+    return retService;
+  }
+
+  public getName(): string {
+    return this.name;
+  }
+
+  public getUuid(): string {
+    return this.uuid;
   }
 
   public constructor (
@@ -18,6 +35,9 @@ export abstract class AbstractHsdService {
         protected accessory: HsdPlatformAccessory,
         protected config: HsdServiceConfig,
   ) {
-    //
+    this.name = this.config.serviceName;
+    this.serviceId = this.accessory.context.accessoryName + ' '
+    + this.config.serviceName + ' '
+    + this.config.characteristics[0].endpoints[0];
   }
 }
