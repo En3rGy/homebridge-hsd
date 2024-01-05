@@ -1,4 +1,4 @@
-name: Homebridge Plugin Build and Deployment
+name: Build
 
 on: [push, pull_request]
 
