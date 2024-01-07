@@ -1,4 +1,4 @@
-import { API, Characteristic, Logging } from 'homebridge';
+import { API, Logging } from 'homebridge';
 import { HomeServerConnector } from './hs';
 
 import { AbstractHsdService } from './service/AbstractHsdService';
