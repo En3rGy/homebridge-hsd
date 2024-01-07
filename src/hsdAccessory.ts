@@ -8,6 +8,10 @@ import { HsdAccessoryConfig } from './config';
 
 import { Lightbulb } from './service/Lightbulb';
 import { GarageDoorOpener } from './service/GarageDoorOpener';
+import { Outlet } from './service/Outlet';
+import { Switch } from './service/Switch';
+import { TemperatureSensor } from './service/TemperatureSensor';
+
 
 /**
  * Platform Accessory
@@ -62,12 +66,24 @@ class HsdAccessory {
 
       switch (service.serviceType) {
 
+        case 'GarageDoorOpener':
+          this.services.push(new GarageDoorOpener(this.api, this.hsd, accessory, service));
+          break;
+
         case 'Lightbulb':
           this.services.push(new Lightbulb(this.api, this.hsd, accessory, service));
           break;
 
-        case 'GarageDoorOpener':
-          this.services.push(new GarageDoorOpener(this.api, this.hsd, accessory, service));
+        case 'Outlet':
+          this.services.push(new Outlet(this.api, this.hsd, accessory, service));
+          break;
+
+        case 'Switch':
+          this.services.push(new Switch(this.api, this.hsd, accessory, service));
+          break;
+
+        case 'TemperatureSensor':
+          this.services.push(new TemperatureSensor(this.api, this.hsd, accessory, service));
           break;
 
         default:
