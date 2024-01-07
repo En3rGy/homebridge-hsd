@@ -84,6 +84,7 @@
                             { "title": "Obstruction Detection", "enum": ["ObstructionDetection"]},
                             { "title": "Position State", "enum": ["PositionState"]},
                             { "title": "Target Position", "enum": ["TargetPosition"]}
+                            { "title": "Current Temperature", "enum": ["CurrentTemperature"]}
                           ]
                         },
                         "endpoints": {
