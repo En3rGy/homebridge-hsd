@@ -14,7 +14,7 @@ export const addCurrentPosition = (api: API,
   }, getEndpoint);
 
   on.onGet(async () => {
-    return hsd.getCo(getEndpoint);
+    return Number(hsd.getCo(getEndpoint));
   });
 };
 

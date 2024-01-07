@@ -6,15 +6,15 @@ export const addCurrentDoorStateCharacteristic = (api: API,
   hsd: HomeServerConnector,
   getEndpoint: string): void => {
 
-  const on = service.getCharacteristic(api.hap.Characteristic.CurrentDoorState);
+  const currentDoorStat = service.getCharacteristic(api.hap.Characteristic.CurrentDoorState);
 
   // Add subscription
   hsd.addListener(reading => {
-    on.updateValue(Number(reading));
+    currentDoorStat.updateValue(Number(reading));
   }, getEndpoint);
 
-  on.onGet(async () => {
-    return hsd.getCo(getEndpoint);
+  currentDoorStat.onGet(async () => {
+    return Number(hsd.getCo(getEndpoint));
   });
 };
 

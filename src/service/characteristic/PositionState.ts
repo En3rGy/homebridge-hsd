@@ -6,15 +6,15 @@ export const addPositionStateCharacteristic = (api: API,
   hsd: HomeServerConnector,
   getEndpoint: string): void => {
 
-  const on = service.getCharacteristic(api.hap.Characteristic.PositionState);
+  const positionState = service.getCharacteristic(api.hap.Characteristic.PositionState);
 
   // Add subscription
   hsd.addListener(reading => {
-    on.updateValue(Number(reading));
+    positionState.updateValue(Number(reading));
   }, getEndpoint);
 
-  on.onGet(async () => {
-    return hsd.getCo(getEndpoint);
+  positionState.onGet(async () => {
+    return Number(hsd.getCo(getEndpoint));
   });
 };
 

@@ -113,7 +113,7 @@ export class HomeServerConnector {
     } else if (type === 'push') {
       endpoint = jsonMsg.subscription.key;
       value = jsonMsg.data.value;
-      this.logger.info('hs.ts | HomeserverConnector | Received push message with %s: %s', endpoint, value);
+      this.logger.info('hs.ts | HomeserverConnector | Received push message with %s: "%s"', endpoint, value);
 
       /// return value via callback
       const callback = this._listeners.get(endpoint);
@@ -130,7 +130,7 @@ export class HomeServerConnector {
       // ### reply on previous get call ###
       if (method === 'get') {
         value = jsonMsg.data.value;
-        this.logger.info('hs.ts | HomeserverConnector | Received ' + endpoint + ': ' + value);
+        this.logger.info('hs.ts | HomeserverConnector | Received as get-reply for %s: "%s"', endpoint, value);
 
         // returns the get value if getCo was called before
         const resolver = this.requestPromiseResolver.get(endpoint);
@@ -143,7 +143,7 @@ export class HomeServerConnector {
 
         if (method in this._msgQueu) {  // @todo Check if required.
           if (endpoint in this._msgQueu[method]) {
-            this.logger.debug('Found recived method and endpoint in msgQue');
+            this.logger.debug('Found received method and endpoint in msgQue');
             this._msgQueu[method][endpoint] = value;
           }
         }
@@ -152,7 +152,7 @@ export class HomeServerConnector {
       } else if (method === 'set') {
         // returns the get value if getCo was called before
         const resolver = this.requestPromiseResolver.get(endpoint);
-        this.logger.info('hs.ts | HomeserverConnector | Received set confirmation for ' + endpoint);
+        this.logger.info('hs.ts | HomeserverConnector | Received set confirmation for %s' + endpoint);
 
         if (resolver) {
           resolver(String(this.lastSet.get(endpoint)));
@@ -161,7 +161,7 @@ export class HomeServerConnector {
           this.lastSet.delete(endpoint);
         }
       } else {
-        this.logger.warn('hs.ts | HomeserverConnector | Received unknown method: ', method);
+        this.logger.warn('hs.ts | HomeserverConnector | Received unknown method: %s', method);
         value = '';
       }
 
@@ -169,7 +169,7 @@ export class HomeServerConnector {
         this._listeners[endpoint](value);
       }*/
     } else {
-      this.logger.warn('hs.ts | HomeserverConnector | Received unknown msg type: ', type);
+      this.logger.warn('hs.ts | HomeserverConnector | Received unknown msg type: %s', type);
     }
 
     return true;
@@ -278,7 +278,7 @@ export class HomeServerConnector {
    * @param value Value to set
    * @returns True if set was successfull.
    */
-  setCo(key: string, value: string|number): boolean {
+  setCo(key: string, value: string|number|boolean): boolean {
 
     // const param = {'context': this._getNewTransactionId(), 'key': key, 'method': 'set', 'value': value};
     const param = {'key': key, 'method': 'set', 'value': value};

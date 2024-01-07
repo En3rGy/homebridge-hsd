@@ -15,11 +15,11 @@ export const addOnCharacteristic = (api: API,
   }, getEndpoint);
 
   on.onGet(async () => {
-    return hsd.getCo(getEndpoint);
+    return Boolean(hsd.getCo(getEndpoint));
   });
 
   on.onSet(async turnOn => {
-    hsd.setCo(setEndpoint, Number(turnOn));
+    hsd.setCo(setEndpoint, Boolean(turnOn));
   });
 };
 

@@ -7,18 +7,18 @@ export const addOnCharacteristic = (api: API,
   setEndpoint: string,
   getEndpoint: string): void => {
 
-  const on = service.getCharacteristic(api.hap.Characteristic.On);
+  const lockTargetState = service.getCharacteristic(api.hap.Characteristic.LockTargetState);
 
   // Add subscription
   hsd.addListener(reading => {
-    on.updateValue(Number(reading));
+    lockTargetState.updateValue(Number(reading));
   }, getEndpoint);
 
-  on.onGet(async () => {
-    return hsd.getCo(getEndpoint);
+  lockTargetState.onGet(async () => {
+    return Number(hsd.getCo(getEndpoint));
   });
 
-  on.onSet(async turnOn => {
+  lockTargetState.onSet(async turnOn => {
     hsd.setCo(setEndpoint, Number(turnOn));
   });
 };

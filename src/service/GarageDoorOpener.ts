@@ -18,7 +18,7 @@ export class GarageDoorOpener extends AbstractHsdService {
     //service.setCharacteristic(this.api.hap.Service.name, config.serviceName);
 
     for (const characteristic of config.characteristics) {
-      if (characteristic.characteristicName === 'CurrentDoorStateCharacteristic') {
+      if (characteristic.characteristicName === 'CurrentDoorState') {
         addCurrentDoorStateCharacteristic(api, service, hsd, characteristic.endpoints[0]);
       } else if (characteristic.characteristicName === 'TargetDoorState') {
         addTargetDoorStateCharacteristic(api, service, hsd, characteristic.endpoints[0], characteristic.endpoints[1]);

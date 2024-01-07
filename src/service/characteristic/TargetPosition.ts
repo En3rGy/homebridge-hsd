@@ -7,18 +7,18 @@ export const addTargetPositionCharacteristic = (api: API,
   setEndpoint: string,
   getEndpoint: string): void => {
 
-  const on = service.getCharacteristic(api.hap.Characteristic.TargetPosition);
+  const targetPosition = service.getCharacteristic(api.hap.Characteristic.TargetPosition);
 
   // Add subscription
   hsd.addListener(reading => {
-    on.updateValue(Number(reading));
+    targetPosition.updateValue(Number(reading));
   }, getEndpoint);
 
-  on.onGet(async () => {
-    return hsd.getCo(getEndpoint);
+  targetPosition.onGet(async () => {
+    return Number(hsd.getCo(getEndpoint));
   });
 
-  on.onSet(async state => {
+  targetPosition.onSet(async state => {
     hsd.setCo(setEndpoint, Number(state));
   });
 };

@@ -6,15 +6,15 @@ export const addObstructionDetectedCharacteristic = (api: API,
   hsd: HomeServerConnector,
   getEndpoint: string): void => {
 
-  const on = service.getCharacteristic(api.hap.Characteristic.ObstructionDetected);
+  const obstructionDetected = service.getCharacteristic(api.hap.Characteristic.ObstructionDetected);
 
   // Add subscription
   hsd.addListener(reading => {
-    on.updateValue(Number(reading));
+    obstructionDetected.updateValue(Boolean(reading));
   }, getEndpoint);
 
-  on.onGet(async () => {
-    return hsd.getCo(getEndpoint);
+  obstructionDetected.onGet(async () => {
+    return Boolean(hsd.getCo(getEndpoint));
   });
 };
 

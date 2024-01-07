@@ -7,18 +7,23 @@ export const addTargetDoorStateCharacteristic = (api: API,
   setEndpoint: string,
   getEndpoint: string): void => {
 
-  const on = service.getCharacteristic(api.hap.Characteristic.TargetDoorState);
+  const targetDoorState = service.getCharacteristic(api.hap.Characteristic.TargetDoorState);
 
   // Add subscription
   hsd.addListener(reading => {
-    on.updateValue(Number(reading));
+    targetDoorState.updateValue(Number(reading));
   }, getEndpoint);
 
-  on.onGet(async () => {
-    return hsd.getCo(getEndpoint);
+  targetDoorState.onGet(async () => {
+    const ret = hsd.getCo(getEndpoint);
+    console.log('"%s"', ret);
+    if (typeof(ret) === 'object') {
+      return 99;
+    }
+    return Number(ret);
   });
 
-  on.onSet(async state => {
+  targetDoorState.onSet(async state => {
     hsd.setCo(setEndpoint, Number(state));
   });
 };
