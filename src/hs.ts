@@ -87,7 +87,7 @@ export class HomeServerConnector {
     const type = jsonMsg.type;
 
     if (code !== 0) {
-      this.logger.info('hs.ts | HomeserverConnector | Received message', JSON.stringify(jsonMsg));
+      this.logger.debug('hs.ts | HomeserverConnector | Received message', JSON.stringify(jsonMsg));
       return false;
     }
 
@@ -96,7 +96,7 @@ export class HomeServerConnector {
     let value: string;
 
     if (type === 'select' || type === 'subscribe') {
-      this.logger.info('hs.ts | HomeserverConnector | Received select/subscribe message');
+      this.logger.debug('hs.ts | HomeserverConnector | Received select/subscribe message');
       for (const item of jsonMsg.data.items) {
         endpoint = item.key;
         value = String(item.data.value);
@@ -113,7 +113,7 @@ export class HomeServerConnector {
     } else if (type === 'push') {
       endpoint = jsonMsg.subscription.key;
       value = jsonMsg.data.value;
-      this.logger.info('hs.ts | HomeserverConnector | Received push message with %s: "%s"', endpoint, value);
+      this.logger.debug('hs.ts | HomeserverConnector | Received push message with %s: "%s"', endpoint, value);
 
       /// return value via callback
       const callback = this._listeners.get(endpoint);
@@ -130,7 +130,7 @@ export class HomeServerConnector {
       // ### reply on previous get call ###
       if (method === 'get') {
         value = jsonMsg.data.value;
-        this.logger.info('hs.ts | HomeserverConnector | Received as get-reply for %s: "%s"', endpoint, value);
+        this.logger.debug('hs.ts | HomeserverConnector | Received as get-reply for %s: "%s"', endpoint, value);
 
         // returns the get value if getCo was called before
         const resolver = this.requestPromiseResolver.get(endpoint);
@@ -152,7 +152,7 @@ export class HomeServerConnector {
       } else if (method === 'set') {
         // returns the get value if getCo was called before
         const resolver = this.requestPromiseResolver.get(endpoint);
-        this.logger.info('hs.ts | HomeserverConnector | Received set confirmation for %s' + endpoint);
+        this.logger.debug('hs.ts | HomeserverConnector | Received set confirmation for %s' + endpoint);
 
         if (resolver) {
           resolver(String(this.lastSet.get(endpoint)));
@@ -253,7 +253,7 @@ export class HomeServerConnector {
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   addListener(listener: (reading: string | number) => void, endpoint: string) {
-    this.logger.info('hs.ts | HomeServerConnector | Adding listener for', endpoint);
+    this.logger.debug('hs.ts | HomeServerConnector | Adding listener for', endpoint);
     this._listeners.set(endpoint, listener);
     this.subscribe([endpoint]);
   }
@@ -264,7 +264,7 @@ export class HomeServerConnector {
    * @returns True if subscription was successfull.
    */
   subscribe(keys: string[]): boolean {
-    this.logger.info('Subscribing to', keys);
+    this.logger.debug('Subscribing to', keys);
     const msg = {'type': 'subscribe', 'param': {'keys': keys, 'context': this._getNewTransactionId()}};
     if (this.sendJson(msg)) {
       return true;

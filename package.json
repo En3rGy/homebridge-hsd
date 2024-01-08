@@ -1,6 +1,6 @@
 {
   "private": true,
-  "displayName": "Gira Homeserver Bridge",
+  "displayName": "Homebridge Gira Homeserver URL-Endpoint",
   "name": "homebridge-hsd",
   "version": "1.0.7",
   "description": "Plugin to access KNX bus via Gira Homeserver",
