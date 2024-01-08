@@ -32,8 +32,8 @@ jobs:
       - name: Build the project
         run: npm run build
 
-      - name: Install Homebridge Plugin
-        run: npm install ~/homebridge-hsd
+      # - name: Install Homebridge Plugin
+      #  run: npm install ~/homebridge-hsd
 
       - name: List, audit, fix outdated dependencies and build again
         run: |
