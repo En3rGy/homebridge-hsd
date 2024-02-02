@@ -28,6 +28,11 @@ export class HomeServerConnector {
   private requestPromiseRejecter: Map<string, (reason?: any) => void> = new Map();
   private lastSet: Map<string, string> = new Map();
 
+  private _hsIp = '';
+  private _hsPort = 0;
+  private _user = '';
+  private _pw = '';
+
   /**
    *
    */
@@ -51,10 +56,12 @@ export class HomeServerConnector {
    * @param pw
    */
   connect(hsIp: string, hsPort: number, user: string, pw: string) {
-    const hostname = hsIp;
-    const port = hsPort;
+    this._hsIp = hsIp;
+    this._hsPort = hsPort;
+    this._user = user;
+    this._pw = pw;
     const prot = 'wss';
-    const url = prot + '://' + hostname + ':' + port + '/endpoints/ws?authorization=' + encodeURIComponent(btoa(user + ':' + pw));
+    const url = prot + '://' + this._hsIp + ':' + this._hsPort + '/endpoints/ws?authorization=' + encodeURIComponent(btoa(user + ':' + pw));
     this._ws = new WebSocket.WebSocket(url, { rejectUnauthorized: false });
     this._connState = CONNECTION_STATE.CONNECTING;
 
@@ -205,6 +212,7 @@ export class HomeServerConnector {
     // Create a promise to wait for the response
 
     if (this.getConnState() !== CONNECTION_STATE.OPEN) {
+      this.connect(this._hsIp, this._hsPort, this._user, this._pw);
       if (retries > 0) {
         setTimeout(() => {
           this.sendJson(msg, retries - 1);
@@ -239,7 +247,7 @@ export class HomeServerConnector {
       }
 
       const smsg = JSON.stringify(msg);
-      this.logger.info('hs.ts | Send message: ' + smsg);
+      this.logger.debug('hs.ts | Send message: ' + smsg);
       this._ws.send(smsg);
 
     }

@@ -26,6 +26,80 @@ From KNX point of view:
 * Services are usually devices providing multiple functions (e.g. on/off, dimm).
 * Characteristics are the smallest unit und realsied by one or few group addresses (e.g. on/off with get GA and set GA)
 
+# Available Servies and Characteristics Configuration
+Check [Homebridge.io docuemntation](https://developers.homebridge.io/#/service) for descriptions of Homebridge _Services_ and **required** or **optional** _Characteristics_. The following services and characteristics are implemented in this plug-in. 
+
+## Services
+### Garage Door Opener
+#### Characteristics
+- [Current Door State](#current-door-state)
+- [Target Door State](#target-door-state)
+- [Obstruction Detection](#obstruction-detected)
+
+### Lightbulb
+#### Characteristics
+- [On](#on)
+- [Brightness](#brightness) 
+
+### Outlet
+#### Characteristics
+- [On](#on)
+
+### Switch
+#### Characteristics
+- [On](#on)
+
+### Temperature Sensor
+#### Characterisitcs
+- [Current Temperature](#current-temperature)
+
+### Window
+#### Characterisitcs
+- [Current Door State](#current-door-state)
+- [Target Door State](#target-door-state)
+- [Obstruction Detected](#obstruction-detected)
+
+
+## Characteristics
+
+### Brightness
+- Endpoint 1: Set URL Endpoint
+- Endpoint 2: Get URL Endpoint
+
+### Current Door State
+- Endpoint 1: Get URL endpoint
+
+### Current Position
+- Endpoint 1: Get URL Endpoint
+
+### Current Temperature
+- Endpoint 1: Get URL endpoint
+
+### Lock Current State
+- Endpoint 1: Set URL Endpoint
+- Endpoint 2: Get URL Endpoint
+
+### Lock Target State
+- Endpoint 1: Set URL Endpoint
+- Endpoint 2: Get URL Endpoint
+
+### Obstruction Detected
+- Endpoint 1: Get URL endpoint
+
+### On
+- Endpoint 1: Set URL Endpoint
+- Endpoint 2: Get URL Endpoint
+
+### Position State
+- Endpoint 1: Get URL endpoint
+
+### Target Door State
+- Endpoint 1: Set URL endpoint
+- Endpoint 2: Get URL endpoint
+
+### Target Position
+- Endpoint 1: Set URL endpoint
+- Endpoint 2: Get URL endpoint
 
 # Background
 

@@ -16,7 +16,6 @@ export const addTargetDoorStateCharacteristic = (api: API,
 
   targetDoorState.onGet(async () => {
     const ret = hsd.getCo(getEndpoint);
-    console.log('"%s"', ret);
     if (typeof(ret) === 'object') {
       return 99;
     }
