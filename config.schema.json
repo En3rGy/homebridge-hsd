@@ -4,7 +4,13 @@
   "footerDisplay": "v0.8",
   "singular": false,
   "schema": {
-    "required": ["hsIp", "hsUserName", "hsUserPw", "hsPort", "accessories"],
+    "required": [
+      "hsIp",
+      "hsUserName",
+      "hsUserPw",
+      "hsPort",
+      "accessories"
+    ],
     "type": "object",
     "properties": {
       "hsIp": {
@@ -33,7 +39,9 @@
         "expanded": false,
         "items": {
           "type": "object",
-          "required": ["accessoryName"],
+          "required": [
+            "accessoryName"
+          ],
           "properties": {
             "accessoryName": {
               "title": "Accessory Name",
@@ -43,7 +51,7 @@
             "services": {
               "type": "array",
               "expandable": true,
-              "expanded": false,      
+              "expanded": false,
               "items": {
                 "type": "object",
                 "properties": {
@@ -58,17 +66,42 @@
                     "required": true,
                     "default": "Lightbulb",
                     "oneOf": [
-                      { "title": "Lightbulb", "enum": ["Lightbulb"] },
-                      { "title": "Outlet", "enum": ["Outlet"] },
-                      { "title": "Switch", "enum": ["Switch"] },
-                      { "title": "Garage Door Opener", "enum": ["GarageDoorOpener"] },
-                      { "title": "Window", "enum": ["Window"] }
+                      {
+                        "title": "Lightbulb",
+                        "enum": [
+                          "Lightbulb"
+                        ]
+                      },
+                      {
+                        "title": "Outlet",
+                        "enum": [
+                          "Outlet"
+                        ]
+                      },
+                      {
+                        "title": "Switch",
+                        "enum": [
+                          "Switch"
+                        ]
+                      },
+                      {
+                        "title": "Garage Door Opener",
+                        "enum": [
+                          "GarageDoorOpener"
+                        ]
+                      },
+                      {
+                        "title": "Window",
+                        "enum": [
+                          "Window"
+                        ]
+                      }
                     ]
-                  },                  
+                  },
                   "characteristics": {
                     "type": "array",
                     "expandable": true,
-                    "expanded": false,                  
+                    "expanded": false,
                     "items": {
                       "type": "object",
                       "properties": {
@@ -78,20 +111,60 @@
                           "default": "On",
                           "description": "<h4>Endpoints</h4><p><ul><li>Brightness: 1=set, 2=get</li><li>On: 1=set, 2=get</li><li>CurrentDoorState: 1=get</li><li>TargetDoorState: 1=set, 2=get</li><li>ObstructionDetected: 1=get</li></ul></p>",
                           "oneOf": [
-                            { "title": "Brightness", "enum": ["Brightness"]},
-                            { "title": "On", "enum": ["On"]},
-                            { "title": "Current Door State", "enum": ["CurrentDoorState"]},
-                            { "title": "Target Door State", "enum": ["TargetDoorState"]},
-                            { "title": "Obstruction Detection", "enum": ["ObstructionDetection"]},
-                            { "title": "Position State", "enum": ["PositionState"]},
-                            { "title": "Target Position", "enum": ["TargetPosition"]}
-                            { "title": "Current Temperature", "enum": ["CurrentTemperature"]}
+                            {
+                              "title": "Brightness",
+                              "enum": [
+                                "Brightness"
+                              ]
+                            },
+                            {
+                              "title": "On",
+                              "enum": [
+                                "On"
+                              ]
+                            },
+                            {
+                              "title": "Current Door State",
+                              "enum": [
+                                "CurrentDoorState"
+                              ]
+                            },
+                            {
+                              "title": "Target Door State",
+                              "enum": [
+                                "TargetDoorState"
+                              ]
+                            },
+                            {
+                              "title": "Obstruction Detection",
+                              "enum": [
+                                "ObstructionDetection"
+                              ]
+                            },
+                            {
+                              "title": "Position State",
+                              "enum": [
+                                "PositionState"
+                              ]
+                            },
+                            {
+                              "title": "Target Position",
+                              "enum": [
+                                "TargetPosition"
+                              ]
+                            },
+                            {
+                              "title": "Current Temperature",
+                              "enum": [
+                                "CurrentTemperature"
+                              ]
+                            }
                           ]
                         },
                         "endpoints": {
                           "type": "array",
                           "expandable": true,
-                          "expanded": false,                        
+                          "expanded": false,
                           "items": {
                             "title": "Endpoints",
                             "type": "string"

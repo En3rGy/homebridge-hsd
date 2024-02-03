@@ -1,7 +1,7 @@
 {
   "name": "homebridge-hsd",
   "displayName": "Homebridge Gira Homeserver URL-Endpoint",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Plugin to access KNX bus via Gira Homeserver",
   "license": "MIT",
   "keywords": [

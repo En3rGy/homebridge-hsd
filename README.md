@@ -2,11 +2,6 @@
 
 Homebridge-hsd is a plugin for [Homebridge.io](https://homebridge.io/). It accesses KNX via the [Gira HomeSever URL endpoints](https://partner.gira.com/en/service/software-tools/developer.html).
 
-## Helpful Links
-* [Gira HomeServer URL Endpoint Documentation](https://partner.gira.com/en/service/software-tools/developer.html): \HS ICD\URL Endpoint\documentation\de
-* [Homebridge KNX Plugin](https://github.com/kodmax/homebridge-knx-eib) as template
-* [Homebridge Service Types](https://developers.homebridge.io/#/service)
-
 ## Glossary
 
 | Term             | Definition              |
@@ -17,6 +12,10 @@ Homebridge-hsd is a plugin for [Homebridge.io](https://homebridge.io/). It acces
 | Characteristic | Requiered by Homebridge. A "characteristic" is a specific property within a service. These are the individual attributes or settings that a service can control. For example, a light service could have the characteristics "On/Off status", "Brightness" and "Color temperature". Characteristics are the actual data points that are read or written by HomeKit. |
 | Endpoints | Gira HomeServer URL Endpoints. The interface of the Gira HomeServer to KNX, mirroring KNX Group Addresses. |
 
+## Helpful Links
+* [Gira HomeServer URL Endpoint Documentation](https://partner.gira.com/en/service/software-tools/developer.html): \HS ICD\URL Endpoint\documentation\de
+* [Homebridge KNX Plugin](https://github.com/kodmax/homebridge-knx-eib) as template
+* [Homebridge Service Types](https://developers.homebridge.io/#/service)
 
 # Strategy
 
@@ -31,30 +30,39 @@ Check [Homebridge.io docuemntation](https://developers.homebridge.io/#/service) 
 
 ## Services
 ### Garage Door Opener
-#### Characteristics
+Check required Homebridge characteristics for [Garage Door Opener Service](https://developers.homebridge.io/#/service/GarageDoorOpener).
+
+The plugin implemented the following characteristics:
 - [Current Door State](#current-door-state)
 - [Target Door State](#target-door-state)
 - [Obstruction Detection](#obstruction-detected)
 
 ### Lightbulb
-#### Characteristics
+Check required Homebridge characteristics for [Lightbulb Service](https://developers.homebridge.io/#/service/Lightbulb).
+
+The plugin implemented the following characteristics:
 - [On](#on)
 - [Brightness](#brightness) 
 
 ### Outlet
-#### Characteristics
+Check required Homebridge characteristics for [Outlet Service](https://developers.homebridge.io/#/service/Outlet).
+The plugin implemented the following characteristics:
 - [On](#on)
 
 ### Switch
-#### Characteristics
+Check required Homebridge characteristics for [Switch Service](https://developers.homebridge.io/#/service/Switch).
+The plugin implemented the following characteristics:
 - [On](#on)
 
 ### Temperature Sensor
-#### Characterisitcs
+Check required Homebridge characteristics for [Temperature Sensor Service](https://developers.homebridge.io/#/service/TemperatureSensor).
+The plugin implemented the following characteristics:
 - [Current Temperature](#current-temperature)
 
 ### Window
-#### Characterisitcs
+Check required Homebridge characteristics for [Window Service](https://developers.homebridge.io/#/service/Window).
+
+The plugin implemented the following characteristics:
 - [Current Door State](#current-door-state)
 - [Target Door State](#target-door-state)
 - [Obstruction Detected](#obstruction-detected)
@@ -271,6 +279,4 @@ For reference, the current criteria are:
 - The plugin must not require the user to run Homebridge in a TTY or with non-standard startup parameters, even for initial configuration.
 - If the plugin needs to write files to disk (cache, keys, etc.), it must store them inside the Homebridge storage directory.
 
-### Useful Links
-Note these links are here for help but are not supported/verified by the Homebridge team
-- [Custom Characteristics](https://github.com/homebridge/homebridge-plugin-template/issues/20)
+
