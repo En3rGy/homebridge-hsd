@@ -1,3 +1,8 @@
+[![GitHub version](https://img.shields.io/github/package-json/v/En3rGy/homebridge-hsd?label=GitHub)](https://github.com/En3rGy/homebridge-hsd)
+[![npm version](https://img.shields.io/npm/v/homebridge-hsd?color=%23cb3837&label=npm)](https://www.npmjs.com/package/homebridge-hsd)
+![GitHub License](https://img.shields.io/github/license/En3rGy/homebridge-hsd)
+
+
 # Introduction
 
 Homebridge-hsd is a plugin for [Homebridge.io](https://homebridge.io/). It accesses KNX via the [Gira HomeSever URL endpoints](https://partner.gira.com/en/service/software-tools/developer.html).
