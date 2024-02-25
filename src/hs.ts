@@ -67,7 +67,7 @@ export class HomeServerConnector {
 
     this._ws.on('open', () => {
       this._connState = CONNECTION_STATE.OPEN;
-      this.logger.info('Conncted to HS');
+      this.logger.info('Connected to HS');
     });
 
     this._ws.on('message', (message: string) => {
@@ -90,11 +90,25 @@ export class HomeServerConnector {
    */
   receivedMessage(message: string): boolean {
     const jsonMsg = JSON.parse(message);
+
+    if (! jsonMsg) {
+      this.logger.error('hs.ts | HomeserverConnector | receivedMessage: JSON parser failed für %s', message);
+      return false;
+    }
+
     const code = jsonMsg.code;
     const type = jsonMsg.type;
+    const data = jsonMsg.data;
 
     if (code !== 0) {
-      this.logger.debug('hs.ts | HomeserverConnector | Received message', JSON.stringify(jsonMsg));
+      if ('request' in jsonMsg) {
+        this.logger.error('hs.ts | HomeserverConnector | receivedMessage > Error and aborting due to code %d for %s requesting %s',
+          code,
+          jsonMsg.request.key,
+          jsonMsg.request.method);
+      } else {
+        this.logger.error('hs.ts | HomeserverConnector | receivedMessage > Error and aborting due to %s', message);
+      }
       return false;
     }
 
@@ -104,7 +118,14 @@ export class HomeServerConnector {
 
     if (type === 'select' || type === 'subscribe') {
       this.logger.debug('hs.ts | HomeserverConnector | Received select/subscribe message');
-      for (const item of jsonMsg.data.items) {
+      for (const item of data.items) {
+        if (item.code !== 0) {
+          this.logger.error('hs.ts | HomeserverConnector | receivedMessage > Error and aborting due to code %s for %s requesting %s',
+            item.code,
+            item.key,
+            type);
+          return false;
+        }
         endpoint = item.key;
         value = String(item.data.value);
 
@@ -247,7 +268,7 @@ export class HomeServerConnector {
       }
 
       const smsg = JSON.stringify(msg);
-      this.logger.debug('hs.ts | Send message: ' + smsg);
+      this.logger.debug('hs.ts | Send message: %s', smsg);
       this._ws.send(smsg);
 
     }
