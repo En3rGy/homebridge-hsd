@@ -4,6 +4,7 @@ import { API } from 'homebridge';
 import * as WebSocket from 'ws';
 import { Logging } from 'homebridge';
 import { HsdAccessory } from './hsdAccessory';
+import { randomUUID } from 'crypto';
 
 export enum CONNECTION_STATE {
   INIT = 0,
@@ -16,11 +17,14 @@ export enum CONNECTION_STATE {
 
 export class HomeServerConnector {
 
+  private static _instance: HomeServerConnector;
+
   private _ws: WebSocket.WebSocket | null = null;
   private _connState = CONNECTION_STATE.INIT;
   private _transactionIdCnt = 0;
   private _listeners: Map<string, (reading: string) => void> = new Map();
   private _msgQueu = {};
+  private _uuid = '';
 
   private requestPromiseResolver: Map<string, (value: string | PromiseLike<string>) => void> = new Map();
 
@@ -33,11 +37,33 @@ export class HomeServerConnector {
   private _user = '';
   private _pw = '';
 
+  private _errorCodes = {
+    0: 'Everything is fine.',
+    400: 'Invalid request (Bad Request).',
+    403: 'Access denied (Forbidden). Check if the read/write flag is set for the user groups on the Endpoint-tab.',
+    404: 'The requested HS-Object does not exist in the called context.',
+    500: 'An error occurred in the server when generating the response.',
+    901: 'The specified key is invalid.',
+    902: 'reserved',
+    903: 'The object parameters are invalid.',
+    904: 'The object is not subscribed.',
+  };
+
   /**
    *
    */
-  constructor(private api: API, private logger: Logging, private accessory: Map<string, HsdAccessory>) {
-    //
+  private constructor(private api: API, private logger: Logging, private accessory: Map<string, HsdAccessory>) {
+    this._uuid = randomUUID();
+  }
+
+  // This static method controls the access to the singleton instance.
+  // On the first run, it creates the instance and stores it in a static field.
+  // On subsequent runs, it returns the stored instance.
+  public static getInstance(api: API, logger: Logging, accessory: Map<string, HsdAccessory>): HomeServerConnector {
+    if (!HomeServerConnector._instance) {
+      HomeServerConnector._instance = new HomeServerConnector(api, logger, accessory);
+    }
+    return HomeServerConnector._instance;
   }
 
   /**
@@ -56,6 +82,11 @@ export class HomeServerConnector {
    * @param pw
    */
   connect(hsIp: string, hsPort: number, user: string, pw: string) {
+    if ((this._connState === CONNECTION_STATE.OPEN) || (this._connState === CONNECTION_STATE.CONNECTING)) {
+      return; // already connected
+    }
+    this.logger.info('hs.ts | HomeServerConnector | connect > Current connection state is %d', this._connState);
+
     this._hsIp = hsIp;
     this._hsPort = hsPort;
     this._user = user;
@@ -67,7 +98,7 @@ export class HomeServerConnector {
 
     this._ws.on('open', () => {
       this._connState = CONNECTION_STATE.OPEN;
-      this.logger.info('Connected to HS');
+      this.logger.info('Connected to HS by %s', this._uuid);
     });
 
     this._ws.on('message', (message: string) => {
@@ -102,10 +133,17 @@ export class HomeServerConnector {
 
     if (code !== 0) {
       if ('request' in jsonMsg) {
-        this.logger.error('hs.ts | HomeserverConnector | receivedMessage > Error and aborting due to code %d for %s requesting %s',
-          code,
-          jsonMsg.request.key,
-          jsonMsg.request.method);
+        if (code in this._errorCodes) {
+          this.logger.error('hs.ts | HomeserverConnector | receivedMessage > Error and aborting due to "%s" for %s requesting %s',
+            this._errorCodes[code],
+            jsonMsg.request.key,
+            jsonMsg.request.method);
+        } else {
+          this.logger.error('hs.ts | HomeserverConnector | receivedMessage > Error and aborting due to code %d for %s requesting %s',
+            code,
+            jsonMsg.request.key,
+            jsonMsg.request.method);
+        }
       } else {
         this.logger.error('hs.ts | HomeserverConnector | receivedMessage > Error and aborting due to %s', message);
       }
@@ -120,21 +158,31 @@ export class HomeServerConnector {
       this.logger.debug('hs.ts | HomeserverConnector | Received select/subscribe message');
       for (const item of data.items) {
         if (item.code !== 0) {
-          this.logger.error('hs.ts | HomeserverConnector | receivedMessage > Error and aborting due to code %s for %s requesting %s',
-            item.code,
-            item.key,
-            type);
-          return false;
-        }
-        endpoint = item.key;
-        value = String(item.data.value);
+          if ('request' in jsonMsg) {
+            if (code in this._errorCodes) {
+              this.logger.error('hs.ts | HomeserverConnector | receivedMessage > Error and aborting due to "%s" for %s requesting %s',
+                this._errorCodes[ item.code],
+                item.key,
+                type);
+            } else {
+              this.logger.error('hs.ts | HomeserverConnector | receivedMessage > Error and aborting due to code %d for %s requesting %s',
+                item.code,
+                item.key,
+                type);
+            }
+            return false;
+          }
 
-        /// return value via callback
-        const callback = this._listeners.get(endpoint);
-        if (callback) {
-          callback(value);
-        } else {
-          this.logger.warn('hs.ts | HomeserverConnector | No callback for %s registered', endpoint);
+          endpoint = item.key;
+          value = String(item.data.value);
+
+          /// return value via callback
+          const callback = this._listeners.get(endpoint);
+          if (callback) {
+            callback(value);
+          } else {
+            this.logger.warn('hs.ts | HomeserverConnector | No callback for %s registered', endpoint);
+          }
         }
       }
 

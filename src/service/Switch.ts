@@ -12,7 +12,6 @@ export class Switch extends AbstractHsdService {
     super(api, hsd, accessory, config);
 
     const service = this.getService(this.api.hap.Service.Switch);
-    //service.setCharacteristic(this.api.hap.Service.name, config.serviceName);
 
     for (const characteristic of config.characteristics) {
       if (characteristic.characteristicName === 'On') {
