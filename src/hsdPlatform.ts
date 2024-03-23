@@ -10,7 +10,14 @@ import { HsdPlatformConfig } from './config';
 export class HsdPlatform implements DynamicPlatformPlugin {
   private cachedAccessories: Map<string, HsdPlatformAccessory> = new Map();
   private hsdAccessories: Map<string, HsdAccessory> = new Map();
-  private config: HsdPlatformConfig;
+  private config: HsdPlatformConfig = {
+    hsIp: '',
+    hsUserName: '',
+    hsUserPw: '',
+    hsPort: 0,
+    accessories: [], // Assuming you have an array of HsdAccessoryConfig objects
+    platform: '',
+  };
 
   private async connect (): Promise<HomeServerConnector> {
     const link = HomeServerConnector.getInstance(this.api, this.logger, this.hsdAccessories);
@@ -18,7 +25,7 @@ export class HsdPlatform implements DynamicPlatformPlugin {
     this.logger.info(`hsdPlatform.ts | HsdPlatform | HSD IP gateway ${this.config.hsIp} connection established.`);
 
     this.api.on(APIEvent.SHUTDOWN, async () => {
-      await link.disconnect();
+      link.disconnect();
       this.logger.warn(`hsdPlatform.ts | HsdPlatform | hsd IP gateway ${this.config.hsdIp} connection closed.`);
     });
 
@@ -27,10 +34,11 @@ export class HsdPlatform implements DynamicPlatformPlugin {
 
   public constructor (private logger: Logging, config: PlatformConfig, private api: API) {
     this.logger.debug('hsdPlatform.ts | HsdPlatform | Constructor');
-    if (!isHsdPlatformConfig(config)) {
-      throw new Error('hsdPlatform.ts | HsdPlatform | Invalid configuration');
-    } else {
+    if (isHsdPlatformConfig(config)) {
+
       this.config = config;
+    } else {
+      this.logger.error('hsdPlatform.ts | HsdPlatform | Invalid configuration');
     }
 
     api.on(APIEvent.DID_FINISH_LAUNCHING, async () => {
@@ -44,9 +52,13 @@ export class HsdPlatform implements DynamicPlatformPlugin {
 
   private configureAccessories (hsd: HomeServerConnector): void {
     for (const config of this.config.accessories) {
-      const hsdAccessory = new HsdAccessory(config, this.logger, hsd, this.api);
-      this.hsdAccessories.set(hsdAccessory.uuid, hsdAccessory);
-      this.logger.info('hsdPlatform.ts | HsdPlatform | Loaded hsd accessory', hsdAccessory.displayName);
+      try {
+        const hsdAccessory = new HsdAccessory(config, this.logger, hsd, this.api);
+        this.hsdAccessories.set(hsdAccessory.uuid, hsdAccessory);
+        this.logger.info('hsdPlatform.ts | HsdPlatform | Loaded hsd accessory', hsdAccessory.displayName);
+      } catch (error) {
+        this.logger.error('hsdPlatform.ts | HsdPlatform | Error loading accessory', error);
+      }
     }
 
     for (const accessory of this.cachedAccessories.values()) {
@@ -61,7 +73,6 @@ export class HsdPlatform implements DynamicPlatformPlugin {
 
       try {
         hsdAccessory.setupServices(accessory);
-
       } catch (e) {
         this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
         this.logger.debug('hsdPlatform.ts | HsdPlatform | Unregistered hsd accessory', accessory.displayName);

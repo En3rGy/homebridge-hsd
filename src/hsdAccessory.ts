@@ -63,9 +63,7 @@ class HsdAccessory {
   public setupServices (accessory: HsdPlatformAccessory): void {
     for (const service of accessory.context.services) {
       this.logger.info('Set up service', accessory.context.accessoryName, service.serviceName);
-
       switch (service.serviceType) {
-
         case 'GarageDoorOpener':
           this.services.push(new GarageDoorOpener(this.api, this.hsd, accessory, service));
           break;

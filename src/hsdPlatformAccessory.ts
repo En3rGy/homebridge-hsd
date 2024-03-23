@@ -4,5 +4,11 @@ import { HsdAccessoryConfig, HsdPlatformConfig } from './config';
 export type HsdPlatformAccessory = PlatformAccessory<HsdAccessoryConfig>;
 
 export const isHsdPlatformConfig = (config: PlatformConfig): config is HsdPlatformConfig => {
-  return 'hsIp' in config;
+  let isConfig = true;
+  isConfig = isConfig && 'hsIp' in config;
+  isConfig = isConfig && 'hsUserName' in config;
+  isConfig = isConfig && 'hsUserPw' in config;
+  isConfig = isConfig && 'hsPort' in config;
+
+  return isConfig;
 };
