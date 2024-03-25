@@ -22,5 +22,8 @@
   ],
   "exclude": [
     "**/*.spec.ts"
-  ]
+  ],
+  "jest.autoRun": {
+    "onStartup": []
+  }  
 }

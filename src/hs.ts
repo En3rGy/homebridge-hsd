@@ -1,6 +1,4 @@
 /* eslint-disable no-console */
-// import { API, Characteristic } from 'homebridge';
-import { API } from 'homebridge';
 import * as WebSocket from 'ws';
 import { Logging } from 'homebridge';
 import { HsdAccessory } from './hsdAccessory';
@@ -52,16 +50,16 @@ export class HomeServerConnector {
   /**
    *
    */
-  private constructor(private api: API, private logger: Logging, private accessory: Map<string, HsdAccessory>) {
+  private constructor(private logger: Logging, private accessory: Map<string, HsdAccessory>) {
     this._uuid = randomUUID();
   }
 
   // This static method controls the access to the singleton instance.
   // On the first run, it creates the instance and stores it in a static field.
   // On subsequent runs, it returns the stored instance.
-  public static getInstance(api: API, logger: Logging, accessory: Map<string, HsdAccessory>): HomeServerConnector {
+  public static getInstance(logger: Logging, accessory: Map<string, HsdAccessory>): HomeServerConnector {
     if (!HomeServerConnector._instance) {
-      HomeServerConnector._instance = new HomeServerConnector(api, logger, accessory);
+      HomeServerConnector._instance = new HomeServerConnector(logger, accessory);
     }
     return HomeServerConnector._instance;
   }
@@ -256,7 +254,9 @@ export class HomeServerConnector {
    */
   disconnect() {
     if (this._connState === CONNECTION_STATE.OPEN) {
-      this._ws.close();
+      if (this._ws !== null) {
+        this._ws.close();
+      }
     }
     this._connState === CONNECTION_STATE.CLOSED;
     this.logger.info('Gently disconnected from HS.');
@@ -317,8 +317,9 @@ export class HomeServerConnector {
 
       const smsg = JSON.stringify(msg);
       this.logger.debug('hs.ts | Send message: %s', smsg);
-      this._ws.send(smsg);
-
+      if (this._ws !== null) {
+        this._ws.send(smsg);
+      }
     }
     return '';
   }
