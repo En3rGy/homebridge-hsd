@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 
-describe('HomeserverConnector', () => {
+describe('Default Test', () => {
   beforeAll(() => {
     // Runs once before all tests start
   });
