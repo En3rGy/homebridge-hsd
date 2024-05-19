@@ -14,7 +14,12 @@ export const addCurrentDoorStateCharacteristic = (api: API,
   }, getEndpoint);
 
   currentDoorStat.onGet(async () => {
-    return Number(hsd.getCo(getEndpoint));
+    const ret = hsd.getCo(getEndpoint);
+    if (typeof(ret) === 'object') {
+      return Promise.reject(0);
+      //return Promise.reject(new Error('CurrentDoorState.ts | CurrentDoorStat.onGet | Invalid return object!'));
+    }
+    return Number(ret);
   });
 };
 

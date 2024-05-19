@@ -85,14 +85,24 @@ export class HomeServerConnector {
     }
     this.logger.info('hs.ts | HomeServerConnector | connect > Current connection state is %d', this._connState);
 
+    if (hsIp === '' || hsPort <= 0 || user === '' || pw === '') {
+      this.logger.error('hs.ts | HomeserverConnector | IP, Port, user, or password are invalid. Check config!');
+      return;
+    }
+
     this._hsIp = hsIp;
     this._hsPort = hsPort;
     this._user = user;
     this._pw = pw;
     const prot = 'wss';
     const url = prot + '://' + this._hsIp + ':' + this._hsPort + '/endpoints/ws?authorization=' + encodeURIComponent(btoa(user + ':' + pw));
-    this._ws = new WebSocket.WebSocket(url, { rejectUnauthorized: false });
-    this._connState = CONNECTION_STATE.CONNECTING;
+    try {
+      this._ws = new WebSocket.WebSocket(url, { rejectUnauthorized: false });
+      this._connState = CONNECTION_STATE.CONNECTING;
+    } catch (error) {
+      this.logger.error('hs.ts | HomeserverConnector | Error: ' + error);
+      return;
+    }
 
     this._ws.on('open', () => {
       this._connState = CONNECTION_STATE.OPEN;

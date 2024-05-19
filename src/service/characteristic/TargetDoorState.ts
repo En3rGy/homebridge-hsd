@@ -17,7 +17,8 @@ export const addTargetDoorStateCharacteristic = (api: API,
   targetDoorState.onGet(async () => {
     const ret = hsd.getCo(getEndpoint);
     if (typeof(ret) === 'object') {
-      return 99;
+      return Promise.reject(0);
+      // return Promise.reject(new Error('TargetDoorState.ts | targetDoorState.onGet | Invalid return object!'));
     }
     return Number(ret);
   });

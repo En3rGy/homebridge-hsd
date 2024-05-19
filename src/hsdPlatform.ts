@@ -6,6 +6,8 @@ import { HsdAccessory } from './hsdAccessory';
 
 import { PLATFORM_NAME, PLUGIN_NAME } from './settings';
 import { HsdPlatformConfig } from './config';
+// import { exec } from 'child_process';
+// import { error } from 'console';
 
 export class HsdPlatform implements DynamicPlatformPlugin {
   private cachedAccessories: Map<string, HsdPlatformAccessory> = new Map();
@@ -20,29 +22,41 @@ export class HsdPlatform implements DynamicPlatformPlugin {
   };
 
   private async connect (): Promise<HomeServerConnector> {
-    const link = HomeServerConnector.getInstance(this.logger, this.hsdAccessories);
-    link.connect(this.config.hsIp, this.config.hsPort, this.config.hsUserName, this.config.hsUserPw);
-    this.logger.info(`hsdPlatform.ts | HsdPlatform | HSD IP gateway ${this.config.hsIp} connection established.`);
+    if (!isHsdPlatformConfig(this.config, this.logger)) {
+      return Promise.reject(new Error('hsdPlatform.ts | HsdPlatform | connect | Invalid platfrom config. Plugin not working!'));
+    }
+    try {
+      const link = HomeServerConnector.getInstance(this.logger, this.hsdAccessories);
 
-    this.api.on(APIEvent.SHUTDOWN, async () => {
-      link.disconnect();
-      this.logger.warn(`hsdPlatform.ts | HsdPlatform | hsd IP gateway ${this.config.hsdIp} connection closed.`);
-    });
+      link.connect(this.config.hsIp, this.config.hsPort, this.config.hsUserName, this.config.hsUserPw);
+      this.logger.info(`hsdPlatform.ts | HsdPlatform | HSD IP gateway ${this.config.hsIp} connection established.`);
 
-    return link;
+      this.api.on(APIEvent.SHUTDOWN, async () => {
+        link.disconnect();
+        this.logger.warn(`hsdPlatform.ts | HsdPlatform | hsd IP gateway ${this.config.hsdIp} connection closed.`);
+      });
+
+      return link;
+    } catch (error) {
+      this.logger.info(`hsdPlatform.ts | HsdPlatform | Error: ${error}`);
+      return Promise.reject(new Error(`hsdPlatform.ts | HsdPlatform | connect | Error: ${error}. Plugin not working!`));
+    }
   }
 
   public constructor (private logger: Logging, config: PlatformConfig, private api: API) {
     this.logger.debug('hsdPlatform.ts | HsdPlatform | Constructor');
-    if (isHsdPlatformConfig(config)) {
-
+    if (isHsdPlatformConfig(config, logger)) {
       this.config = config;
     } else {
-      this.logger.error('hsdPlatform.ts | HsdPlatform | Invalid configuration');
+      this.logger.error('hsdPlatform.ts | HsdPlatform | Invalid configuration. Plugin not working');
     }
 
     api.on(APIEvent.DID_FINISH_LAUNCHING, async () => {
-      this.configureAccessories(await this.connect());
+      try {
+        this.configureAccessories(await this.connect());
+      } catch (error) {
+        this.logger.error(`hsdPlatform.ts | api.on | Error: ${error}`);
+      }
     });
   }
 
@@ -51,6 +65,10 @@ export class HsdPlatform implements DynamicPlatformPlugin {
   }
 
   private configureAccessories (hsd: HomeServerConnector): void {
+    if (!isHsdPlatformConfig(this.config, this.logger)) {
+      this.logger.error('hsdPlatform.ts | HsdPlatform | Invalid configuration. Plugin not working');
+      return;
+    }
     for (const config of this.config.accessories) {
       try {
         const hsdAccessory = new HsdAccessory(config, this.logger, hsd, this.api);
