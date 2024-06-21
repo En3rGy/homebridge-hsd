@@ -14,12 +14,24 @@ export const addCurrentDoorStateCharacteristic = (api: API,
   }, getEndpoint);
 
   currentDoorStat.onGet(async () => {
-    const ret = hsd.getCo(getEndpoint);
-    if (typeof(ret) === 'object') {
+    const ret = Number(hsd.getCo(getEndpoint));
+
+    let state = -1;
+    if (ret === api.hap.Characteristic.CurrentDoorState.OPEN) {
+      state = api.hap.Characteristic.CurrentDoorState.OPEN;
+    } else if (ret === api.hap.Characteristic.CurrentDoorState.CLOSED) {
+      state = api.hap.Characteristic.CurrentDoorState.CLOSED;
+    } else if (ret === api.hap.Characteristic.CurrentDoorState.OPENING) {
+      state = api.hap.Characteristic.CurrentDoorState.OPEN;
+    } else if (ret === api.hap.Characteristic.CurrentDoorState.CLOSING) {
+      state = api.hap.Characteristic.CurrentDoorState.CLOSING;
+    } else if (ret === api.hap.Characteristic.CurrentDoorState.STOPPED) {
+      state = api.hap.Characteristic.CurrentDoorState.STOPPED;
+    } else {
       return Promise.reject(0);
-      //return Promise.reject(new Error('CurrentDoorState.ts | CurrentDoorStat.onGet | Invalid return object!'));
     }
-    return Number(ret);
+
+    return state;
   });
 };
 

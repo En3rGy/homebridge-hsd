@@ -15,12 +15,17 @@ export const addTargetDoorStateCharacteristic = (api: API,
   }, getEndpoint);
 
   targetDoorState.onGet(async () => {
-    const ret = hsd.getCo(getEndpoint);
-    if (typeof(ret) === 'object') {
+    const ret = Number(hsd.getCo(getEndpoint));
+    let state = api.hap.Characteristic.TargetDoorState.OPEN;
+
+    if (ret === api.hap.Characteristic.TargetDoorState.OPEN) {
+      state = api.hap.Characteristic.TargetDoorState.OPEN;
+    } else if (ret === api.hap.Characteristic.TargetDoorState.CLOSED) {
+      state = api.hap.Characteristic.TargetDoorState.CLOSED;
+    } else {
       return Promise.reject(0);
-      // return Promise.reject(new Error('TargetDoorState.ts | targetDoorState.onGet | Invalid return object!'));
     }
-    return Number(ret);
+    return state;
   });
 
   targetDoorState.onSet(async state => {

@@ -1,7 +1,7 @@
 {
   "pluginAlias": "hsd",
   "pluginType": "platform",
-  "footerDisplay": "v0.8",
+  "footerDisplay": "v0.9",
   "singular": false,
   "schema": {
     "required": [
@@ -67,6 +67,12 @@
                     "default": "Lightbulb",
                     "oneOf": [
                       {
+                        "title": "Garage Door Opener",
+                        "enum": [
+                          "GarageDoorOpener"
+                        ]
+                      },
+                      {
                         "title": "Lightbulb",
                         "enum": [
                           "Lightbulb"
@@ -85,9 +91,9 @@
                         ]
                       },
                       {
-                        "title": "Garage Door Opener",
+                        "title": "Temperature Sensor",
                         "enum": [
-                          "GarageDoorOpener"
+                          "TemperatureSensor"
                         ]
                       },
                       {
@@ -95,7 +101,13 @@
                         "enum": [
                           "Window"
                         ]
-                      }
+                      },
+                      {
+                        "title": "Window Covering",
+                        "enum": [
+                          "WindowCovering"
+                        ]
+                      }                      
                     ]
                   },
                   "characteristics": {
@@ -109,18 +121,12 @@
                           "title": "Characteristics",
                           "type": "string",
                           "default": "On",
-                          "description": "<h4>Endpoints</h4><p><ul><li>Brightness: 1=set, 2=get</li><li>On: 1=set, 2=get</li><li>CurrentDoorState: 1=get</li><li>TargetDoorState: 1=set, 2=get</li><li>ObstructionDetected: 1=get</li></ul></p>",
+                          "description": "<h4>Endpoints</h4><p><ul><li>Brightness: 1=set, 2=get</li><li>On: 1=set, 2=get</li><li>CurrentDoorState: 1=get</li><li>CurrentPosition: 1=get</li><li>CurrentTemperature: 1=get</li><li>HoldPosition: 1=set</li><li>ObstructionDetected: 1=get</li><li>On: 1=set, 2=get</li><li>PositionState: 1=set</li><li>TargetDoorState: 1=set, 2=get</li><li>TargetPosition: 1=set, 2=get</li></ul></p>",
                           "oneOf": [
                             {
                               "title": "Brightness",
                               "enum": [
                                 "Brightness"
-                              ]
-                            },
-                            {
-                              "title": "On",
-                              "enum": [
-                                "On"
                               ]
                             },
                             {
@@ -130,9 +136,21 @@
                               ]
                             },
                             {
-                              "title": "Target Door State",
+                              "title": "Current Position",
                               "enum": [
-                                "TargetDoorState"
+                                "CurrentPosition"
+                              ]
+                            },                            
+                            {
+                              "title": "Current Temperature",
+                              "enum": [
+                                "CurrentTemperature"
+                              ]
+                            },
+                            {
+                              "title": "Hold Position",
+                              "enum": [
+                                "HoldPosition"
                               ]
                             },
                             {
@@ -142,21 +160,27 @@
                               ]
                             },
                             {
+                              "title": "On",
+                              "enum": [
+                                "On"
+                              ]
+                            },
+                            {
                               "title": "Position State",
                               "enum": [
                                 "PositionState"
                               ]
                             },
                             {
-                              "title": "Target Position",
+                              "title": "Target Door State",
                               "enum": [
-                                "TargetPosition"
+                                "TargetDoorState"
                               ]
                             },
                             {
-                              "title": "Current Temperature",
+                              "title": "Target Position",
                               "enum": [
-                                "CurrentTemperature"
+                                "TargetPosition"
                               ]
                             }
                           ]

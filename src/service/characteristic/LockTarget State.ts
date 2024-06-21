@@ -15,6 +15,13 @@ export const addOnCharacteristic = (api: API,
   }, getEndpoint);
 
   lockTargetState.onGet(async () => {
+
+    /* todo:
+    User
+    UNSECURED	Characteristic.LockTargetState.UNSECURED	0
+    SECURED	Characteristic.LockTargetState.SECURED	1
+    */
+
     return Number(hsd.getCo(getEndpoint));
   });
 

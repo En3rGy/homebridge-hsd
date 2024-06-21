@@ -15,10 +15,19 @@ export const addOnCharacteristic = (api: API,
   }, getEndpoint);
 
   lockCurrentState.onGet(async () => {
+
+    /* todo:
+    UNSECURED	Characteristic.LockCurrentState.UNSECURED	0
+    SECURED	Characteristic.LockCurrentState.SECURED	1
+    JAMMED	Characteristic.LockCurrentState.JAMMED	2
+    UNKNOWN	Characteristic.LockCurrentState.UNKNOWN	3
+    */
+
     return Number(hsd.getCo(getEndpoint));
   });
 
   lockCurrentState.onSet(async turnOn => {
+
     hsd.setCo(setEndpoint, Number(turnOn));
   });
 };

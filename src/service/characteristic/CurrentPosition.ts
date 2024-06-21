@@ -1,7 +1,7 @@
 import { API, Service } from 'homebridge';
 import { HomeServerConnector } from '../../hs';
 
-export const addCurrentPosition = (api: API,
+export const addCurrentPositionCharacteristic = (api: API,
   service: Service,
   hsd: HomeServerConnector,
   getEndpoint: string): void => {
