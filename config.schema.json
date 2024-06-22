@@ -114,6 +114,7 @@
                     "type": "array",
                     "expandable": true,
                     "expanded": false,
+                    "description": "<h4>Endpoints</h4><p>Check the <a href=https://developers.homebridge.io/#/config-schema#format>homebridge API documentation</a> regarding the required characteristics per service.</p><p>Different characteristics require one or two endpoints:<table border='1'><tr><th>Characteristic</th><th>1st Endpoint</th><th>2nd Endpoint</th></tr><tr><td>Brightness</td><td>set</td><td>get</td></tr><tr><td>CurrentDoorState</td><td>get</td><td>-</td></tr><tr><td>CurrentPosition</td><td>get</td><td>-</td></tr><tr><td>CurrentTemperature</td><td>get</td><td>-</td></tr><tr><td>HoldPosition</td><td>set</td><td>-</td></tr><tr><td>ObstructionDetected</td><td>get</td><td>-</td></tr><tr><td>On</td><td>set</td><td>get</td></tr><tr><td>PositionState</td><td>set</td><td>-</td></tr><tr><td>TargetDoorState</td><td>set</td><td>get</td></tr><tr><td>TargetPosition</td><td>set</td><td>get</td></tr></table>",
                     "items": {
                       "type": "object",
                       "properties": {
@@ -121,7 +122,6 @@
                           "title": "Characteristics",
                           "type": "string",
                           "default": "On",
-                          "description": "<h4>Endpoints</h4><p><ul><li>Brightness: 1=set, 2=get</li><li>On: 1=set, 2=get</li><li>CurrentDoorState: 1=get</li><li>CurrentPosition: 1=get</li><li>CurrentTemperature: 1=get</li><li>HoldPosition: 1=set</li><li>ObstructionDetected: 1=get</li><li>On: 1=set, 2=get</li><li>PositionState: 1=set</li><li>TargetDoorState: 1=set, 2=get</li><li>TargetPosition: 1=set, 2=get</li></ul></p>",
                           "oneOf": [
                             {
                               "title": "Brightness",
