@@ -1,3 +1,4 @@
+[![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
 [![verified-by-homebridge](https://badgen.net/badge/homebridge/verified/purple)](https://github.com/homebridge/homebridge/wiki/Verified-Plugins)
 [![GitHub version](https://img.shields.io/github/package-json/v/En3rGy/homebridge-hsd?label=GitHub)](https://github.com/En3rGy/homebridge-hsd)
 [![npm version](https://img.shields.io/npm/v/homebridge-hsd?color=%23cb3837&label=npm)](https://www.npmjs.com/package/homebridge-hsd)
